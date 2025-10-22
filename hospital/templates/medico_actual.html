@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Derivación Actual</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container my-5">
+    <div class="card shadow-sm main-card">
+      <div class="card-header bg-white border-0 py-4">
+        <h1>Derivación Actual</h1>
+        <p class="mb-0">Consulta de la derivación en curso</p>
+      </div>
+      <div class="card-body p-4">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Paciente:</strong> Juan Pérez</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Motivo:</strong> Trauma craneoencefálico</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Prestación Requerida:</strong> Cirugía</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Hospital Receptor:</strong> Hospital Rancagua</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Estado:</strong> <span class="badge bg-warning text-dark">En revisión</span></li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Fecha:</strong> 26/09/2025</li>
+        </ul>
+        <a href="/medico/" class="d-block text-center mt-4">Volver al Menú Médico</a>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

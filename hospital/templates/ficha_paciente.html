@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Ficha de Paciente</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container my-5">
+    <div class="card shadow-sm main-card">
+      <div class="card-header bg-white border-0 py-4">
+        <h1>Registrar Ficha de Paciente</h1>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" action="{% url 'ficha_paciente' %}">
+          {% csrf_token %}
+          <fieldset class="mb-4">
+            <legend class="h5 mb-3">Datos del Paciente</legend>
+            <div class="mb-3">
+              <label for="rut" class="form-label">RUT</label>
+              <input type="text" id="rut" name="rut" class="form-control" placeholder="Ej: 12345678-9" required>
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="edad" class="form-label">Edad</label>
+                <input type="number" id="edad" name="edad" class="form-control" placeholder="Ej: 45" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="genero" class="form-label">Género</label>
+                <select id="genero" name="genero" class="form-select">
+                  <option value="" selected>Seleccionar...</option>
+                  <option>Masculino</option>
+                  <option>Femenino</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="prevision" class="form-label">Previsión</label>
+              <select id="prevision" name="prevision" class="form-select">
+                <option value="" selected>Seleccionar...</option>
+                <option>Fonasa</option>
+                <option>Isapre</option>
+                <option>Particular</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset class="mb-4">
+            <legend class="h5 mb-3">Condiciones Clínicas</legend>
+            <div class="mb-3">
+              <label for="comorbilidades" class="form-label">Comorbilidades</label>
+              <input type="text" id="comorbilidades" name="comorbilidades" class="form-control" placeholder="Ej: Diabetes, Hipertensión">
+            </div>
+            <div class="mb-3">
+              <label for="funcionalidad" class="form-label">Funcionalidad</label>
+              <select id="funcionalidad" name="funcionalidad" class="form-select">
+                <option value="" selected>Seleccionar...</option>
+                <option>Autovalente</option>
+                <option>Dependencia Leve</option>
+                <option>Dependencia Severa</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn btn-primary w-100 py-2">Guardar Ficha</button>
+        </form>
+        <a href="{% url 'tens' %}" class="d-block text-center mt-4">Volver al Menú TENS</a>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

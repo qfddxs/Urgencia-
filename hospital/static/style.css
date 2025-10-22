@@ -1,0 +1,71 @@
+/* Estilos personalizados para complementar Bootstrap */
+
+body {
+    background-color: #f8f9fa; /* Un gris muy claro para el fondo */
+}
+
+.card-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.card-header p {
+    color: #6c757d; /* Color de texto secundario de Bootstrap */
+}
+
+/* Estilos para las tarjetas de menú en los paneles */
+.menu-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Keyframes para animación de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Estilos para la página de login */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #eef1f5; /* Un fondo gris azulado muy claro */
+}
+
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.input-group-icon {
+    width: 40px;
+}
+
+/* Animaciones escalonadas para los elementos del login */
+.login-card .animated-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.login-card .item-1 { animation-delay: 0.2s; }
+.login-card .item-2 { animation-delay: 0.3s; }
+.login-card .item-3 { animation-delay: 0.4s; }
+.login-card .item-4 { animation-delay: 0.5s; }
+.login-card .item-5 { animation-delay: 0.6s; }
+.login-card .item-6 { animation-delay: 0.7s; }
