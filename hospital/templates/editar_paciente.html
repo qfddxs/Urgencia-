@@ -37,9 +37,9 @@
                 <label for="genero" class="form-label">Género</label>
                 <select id="genero" name="genero" class="form-select">
                   <option value="">Seleccionar...</option>
-                  {% for value, text in paciente.GENERO_CHOICES %}
-                    <option value="{{ value }}" {% if paciente.genero == value %}selected{% endif %}>{{ text }}</option>
-                  {% endfor %}
+                  <option value="Masculino" {% if paciente.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+                  <option value="Femenino" {% if paciente.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+                  <option value="Otro" {% if paciente.genero == 'Otro' %}selected{% endif %}>Otro</option>
                 </select>
               </div>
             </div>
@@ -47,9 +47,9 @@
               <label for="prevision" class="form-label">Previsión</label>
               <select id="prevision" name="prevision" class="form-select">
                 <option value="">Seleccionar...</option>
-                {% for value, text in paciente.PREVISION_CHOICES %}
-                  <option value="{{ value }}" {% if paciente.prevision == value %}selected{% endif %}>{{ text }}</option>
-                {% endfor %}
+                <option value="Fonasa" {% if paciente.prevision == 'Fonasa' %}selected{% endif %}>Fonasa</option>
+                <option value="Isapre" {% if paciente.prevision == 'Isapre' %}selected{% endif %}>Isapre</option>
+                <option value="Particular" {% if paciente.prevision == 'Particular' %}selected{% endif %}>Particular</option>
               </select>
             </div>
           </fieldset>
@@ -58,15 +58,15 @@
             <legend class="h5 mb-3">Condiciones Clínicas</legend>
             <div class="mb-3">
               <label for="comorbilidades" class="form-label">Comorbilidades</label>
-              <input type="text" id="comorbilidades" name="comorbilidades" class="form-control" value="{{ paciente.comorbilidades|default_if_none:'' }}" placeholder="Ej: Diabetes, Hipertensión">
+              <input type="text" id="comorbilidades" name="comorbilidades" class="form-control" value="{{ paciente.fichapaciente.comorbilidades|default_if_none:'' }}" placeholder="Ej: Diabetes, Hipertensión">
             </div>
             <div class="mb-3">
               <label for="funcionalidad" class="form-label">Funcionalidad</label>
               <select id="funcionalidad" name="funcionalidad" class="form-select">
                 <option value="">Seleccionar...</option>
-                {% for value, text in paciente.FUNCIONALIDAD_CHOICES %}
-                  <option value="{{ value }}" {% if paciente.funcionalidad == value %}selected{% endif %}>{{ text }}</option>
-                {% endfor %}
+                <option value="Autovalente" {% if paciente.fichapaciente.funcionalidad == 'Autovalente' %}selected{% endif %}>Autovalente</option>
+                <option value="Dependencia Leve" {% if paciente.fichapaciente.funcionalidad == 'Dependencia Leve' %}selected{% endif %}>Dependencia Leve</option>
+                <option value="Dependencia Severa" {% if paciente.fichapaciente.funcionalidad == 'Dependencia Severa' %}selected{% endif %}>Dependencia Severa</option>
               </select>
             </div>
           </fieldset>

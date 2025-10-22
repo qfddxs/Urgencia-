@@ -36,6 +36,11 @@ class Paciente(models.Model):
     def __str__(self):
         return self.nombre
 
+    # Propiedades para acceder fácilmente a los datos de la ficha desde el paciente
+    @property
+    def comorbilidades(self):
+        return self.fichapaciente.comorbilidades if hasattr(self, 'fichapaciente') else None
+
 
 class FichaPaciente(models.Model):
     id_ficha = models.AutoField(primary_key=True)

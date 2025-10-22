@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 # Importamos los modelos que acabamos de crear
-from .models import Paciente, Derivacion
+from .models import Paciente, Derivacion, FichaPaciente
 
 # LOGIN
 
@@ -45,10 +45,16 @@ def ficha_paciente(request):
         funcionalidad = request.POST.get('funcionalidad')
 
         if rut and nombre and edad:
-            Paciente.objects.create(
-                rut=rut, nombre=nombre, edad=edad, genero=genero,
-                prevision=prevision, comorbilidades=comorbilidades,
-                funcionalidad=funcionalidad
+            # Primero, creamos o actualizamos el Paciente.
+            # Usamos update_or_create para evitar duplicados por RUT.
+            paciente, created = Paciente.objects.update_or_create(
+                rut=rut,
+                defaults={'nombre': nombre, 'edad': edad, 'genero': genero, 'prevision': prevision}
+            )
+            # Luego, creamos o actualizamos la FichaPaciente asociada.
+            FichaPaciente.objects.update_or_create(
+                id_paciente=paciente,
+                defaults={'comorbilidades': comorbilidades, 'funcionalidad': funcionalidad}
             )
             return redirect('ver_fichas') # Redirige a la lista de pacientes
     return render(request, "ficha_paciente.html")
@@ -141,9 +147,16 @@ def editar_paciente(request, paciente_rut):
         paciente.edad = request.POST.get('edad')
         paciente.genero = request.POST.get('genero')
         paciente.prevision = request.POST.get('prevision')
-        paciente.comorbilidades = request.POST.get('comorbilidades')
-        paciente.funcionalidad = request.POST.get('funcionalidad')
         paciente.save()
+
+        # Actualizamos también la FichaPaciente
+        FichaPaciente.objects.update_or_create(
+            id_paciente=paciente,
+            defaults={
+                'comorbilidades': request.POST.get('comorbilidades'),
+                'funcionalidad': request.POST.get('funcionalidad')
+            }
+        )
         return redirect('ver_fichas')
 
     return render(request, 'editar_paciente.html', {'paciente': paciente})
