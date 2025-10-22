@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,11 +78,11 @@ WSGI_APPLICATION = 'Proyecto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'BASE2',
+        'NAME': 'gestion_hospitalaria',
         'USER': 'root',
-        'PASSWORD': '',  # <-- PON TU CONTRASEÑA DE MYSQL AQUÍ. Si no tienes, déjalo vacío.
-        'HOST': '127.0.0.1', # O 'localhost'
-        'PORT': '3306',      # El puerto por defecto de MySQL
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
