@@ -33,4 +33,7 @@ urlpatterns = [
     path("tens/derivaciones", views.ver_derivaciones, name="ver_derivaciones"),
     path('tens/derivacion/editar/<int:derivacion_id>/', views.editar_derivacion, name='editar_derivacion'),
     path('tens/derivacion/borrar/<int:derivacion_id>/', views.borrar_derivacion, name='borrar_derivacion'),
+    
+    # API para búsqueda de pacientes
+    path('api/buscar-paciente/', views.buscar_paciente_por_rut, name='buscar_paciente_por_rut'),
 ]

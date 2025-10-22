@@ -12,11 +12,11 @@
   <div class="container my-5">
     <div class="card shadow-sm main-card">
       <div class="card-header bg-white border-0 py-4">
-        <h1>Editar Derivación #{{ derivacion.id }}</h1>
-        <p class="mb-0">Paciente: {{ derivacion.paciente.nombre }}</p>
+        <h1>Editar Derivación #{{ derivacion.id_derivacion }}</h1>
+        <p class="mb-0">Paciente: {{ derivacion.id_paciente.nombre }}</p>
       </div>
       <div class="card-body p-4">
-        <form method="POST" action="{% url 'editar_derivacion' derivacion.id %}">
+        <form method="POST" action="{% url 'editar_derivacion' derivacion.id_derivacion %}">
           {% csrf_token %}
           <fieldset class="mb-4">
             <legend class="h5 mb-3">Información de la Derivación</legend>
@@ -26,23 +26,7 @@
             </div>
             <div class="mb-3">
               <label for="prestacion" class="form-label">Prestación Requerida</label>
-              <input type="text" id="prestacion" name="prestacion" class="form-control" value="{{ derivacion.prestacion_requerida }}" required>
-            </div>
-          </fieldset>
-
-          <fieldset class="mb-4">
-            <legend class="h5 mb-3">Evaluación Inicial</legend>
-            <div class="mb-3">
-              <label for="estado-paciente" class="form-label">Estado del Paciente</label>
-              <select id="estado-paciente" name="estado_paciente" class="form-select" required>
-                <option {% if derivacion.estado_paciente == 'Estable' %}selected{% endif %}>Estable</option>
-                <option {% if derivacion.estado_paciente == 'Inestable' %}selected{% endif %}>Inestable</option>
-                <option {% if derivacion.estado_paciente == 'Crítico' %}selected{% endif %}>Crítico</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="observaciones" class="form-label">Observaciones</label>
-              <textarea id="observaciones" name="observaciones" class="form-control" rows="3">{{ derivacion.observaciones|default_if_none:'' }}</textarea>
+              <input type="text" id="prestacion" name="prestacion" class="form-control" value="{{ derivacion.prestacion }}" required>
             </div>
           </fieldset>
 
@@ -52,17 +36,18 @@
               <div class="col-md-6 mb-3">
                 <label for="hospital" class="form-label">Hospital Receptor</label>
                 <select id="hospital" class="form-select" name="hospital" required>
-                  <option {% if derivacion.hospital_receptor == 'Hospital Rancagua' %}selected{% endif %}>Hospital Rancagua</option>
-                  <option {% if derivacion.hospital_receptor == 'Hospital San Fernando' %}selected{% endif %}>Hospital San Fernando</option>
-                  <option {% if derivacion.hospital_receptor == 'Hospital Santa Cruz' %}selected{% endif %}>Hospital Santa Cruz</option>
+                  <option {% if derivacion.id_hospital.nombre == 'Hospital Rancagua' %}selected{% endif %}>Hospital Rancagua</option>
+                  <option {% if derivacion.id_hospital.nombre == 'Hospital San Fernando' %}selected{% endif %}>Hospital San Fernando</option>
+                  <option {% if derivacion.id_hospital.nombre == 'Hospital Santa Cruz' %}selected{% endif %}>Hospital Santa Cruz</option>
                 </select>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="estado" class="form-label">Estado de la Derivación</label>
                 <select id="estado" class="form-select" name="estado" required>
-                  {% for value, text in derivacion.ESTADO_CHOICES %}
-                    <option value="{{ value }}" {% if derivacion.estado == value %}selected{% endif %}>{{ text }}</option>
-                  {% endfor %}
+                  <option value="Pendiente" {% if derivacion.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                  <option value="Aceptada" {% if derivacion.estado == 'Aceptada' %}selected{% endif %}>Aceptada</option>
+                  <option value="Rechazada" {% if derivacion.estado == 'Rechazada' %}selected{% endif %}>Rechazada</option>
+                  <option value="En revisión" {% if derivacion.estado == 'En revisión' %}selected{% endif %}>En revisión</option>
                 </select>
               </div>
             </div>

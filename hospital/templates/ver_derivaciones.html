@@ -34,10 +34,10 @@
               {# Bucle para iterar sobre las derivaciones pasadas desde la vista #}
               {% for derivacion in derivaciones %}
               <tr>
-                <td>{{ derivacion.id }}</td>
-                <td>{{ derivacion.paciente.nombre }}</td> {# Asumiendo que hay una relación con un paciente #}
+                <td>{{ derivacion.id_derivacion }}</td>
+                <td>{{ derivacion.id_paciente.nombre }}</td>
                 <td>{{ derivacion.motivo }}</td>
-                <td>{{ derivacion.hospital_receptor }}</td>
+                <td>{{ derivacion.id_hospital.nombre }}</td>
                 <td>
                   {# Lógica para mostrar un badge de color según el estado #}
                   {% if derivacion.estado == 'Aceptada' %}
@@ -50,8 +50,8 @@
                 </td>
                 <td>{{ derivacion.fecha|date:"d/m/Y" }}</td>
                 <td class="text-end">
-                  <a href="{% url 'editar_derivacion' derivacion.id %}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-pencil-alt"></i> Editar</a>
-                  <a href="{% url 'borrar_derivacion' derivacion.id %}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i> Borrar</a>
+                  <a href="{% url 'editar_derivacion' derivacion.id_derivacion %}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-pencil-alt"></i> Editar</a>
+                  <a href="{% url 'borrar_derivacion' derivacion.id_derivacion %}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i> Borrar</a>
                 </td>
               </tr>
               {% endfor %}

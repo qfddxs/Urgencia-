@@ -14,11 +14,11 @@
       <div class="card-body p-5 text-center">
         <h1 class="h3">¿Estás seguro?</h1>
         <p class="text-muted">
-          Estás a punto de borrar permanentemente la derivación #{{ derivacion.id }} del paciente <strong>{{ derivacion.paciente.nombre }}</strong>.
+          Estás a punto de borrar permanentemente la derivación #{{ derivacion.id_derivacion }} del paciente <strong>{{ derivacion.id_paciente.nombre }}</strong>.
         </p>
         <p><strong>Esta acción no se puede deshacer.</strong></p>
         
-        <form method="POST" action="{% url 'borrar_derivacion' derivacion.id %}">
+        <form method="POST" action="{% url 'borrar_derivacion' derivacion.id_derivacion %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">Sí, borrar</button>
           <a href="{% url 'ver_derivaciones' %}" class="btn btn-secondary">Cancelar</a>
