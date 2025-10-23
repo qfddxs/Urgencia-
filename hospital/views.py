@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.db import models
 # Importamos los modelos que acabamos de crear
-from .models import Paciente, Derivacion
+from .models import Paciente, Derivacion, FichaPaciente, Hospital, Usuario
 
 # LOGIN
 
@@ -9,29 +11,70 @@ def index(request):
 
 def login(request):
     if request.method == "POST":
-        usuario = request.POST.get("usuario")
-        clave = request.POST.get("clave")
-        rol = request.POST.get("rol")
+        usuario_input = request.POST.get("usuario")
+        clave_input = request.POST.get("clave")
 
-        # Validaciones
-        if not usuario or not clave or not rol:
-            return render(request, "index.html", {"error": "Todos los campos son obligatorios."})
+        # Validaciones básicas
+        if not usuario_input or not clave_input:
+            return render(request, "index.html", {
+                "error": "Por favor ingrese usuario y contraseña"
+            })
 
-        if rol == "coordinador":
-            return redirect("coordinador")
-        elif rol == "medico":
-            return redirect("medico")
-        elif rol == "tens":
-            return redirect("tens")
-        else:
-            return render(request, "index.html", {"error": "Rol inválido, selecciona uno correcto."})
-
+        try:
+            # Buscar el usuario en la base de datos
+            user = Usuario.objects.get(usuario=usuario_input)
+            
+            # Verificar la contraseña encriptada
+            from django.contrib.auth.hashers import check_password
+            
+            if check_password(clave_input, user.clave):
+                # Contraseña correcta - Guardar en sesión
+                request.session['usuario_id'] = user.id_usuario
+                request.session['usuario_nombre'] = user.nombre
+                request.session['usuario_rol'] = user.rol
+                
+                # Redirigir según el rol
+                if user.rol == 'TENS':
+                    return redirect('tens')
+                elif user.rol == 'Médico':
+                    return redirect('medico')
+                elif user.rol == 'Coordinador':
+                    return redirect('coordinador')
+                else:
+                    return render(request, "index.html", {
+                        "error": "Rol no válido en el sistema"
+                    })
+            else:
+                # Contraseña incorrecta
+                return render(request, "index.html", {
+                    "error": "Usuario o contraseña incorrectos"
+                })
+                
+        except Usuario.DoesNotExist:
+            # Usuario no existe
+            return render(request, "index.html", {
+                "error": "Usuario o contraseña incorrectos"
+            })
+    
     return render(request, "index.html")
+
+
+def logout(request):
+    """Cerrar sesión del usuario"""
+    request.session.flush()
+    return redirect('index')
 
 
 # PANEL TENS
 
 def tens(request):
+    # Verificar autenticación
+    if 'usuario_id' not in request.session:
+        return redirect('index')
+    
+    # Verificar rol correcto
+    if request.session.get('usuario_rol') != 'TENS':
+        return redirect('index')
     return render(request, "tens.html")
 
 def ficha_paciente(request):
@@ -166,6 +209,13 @@ def borrar_paciente(request, paciente_rut):
 # PANEL MÉDICO
 
 def medico(request):
+    # Verificar autenticación
+    if 'usuario_id' not in request.session:
+        return redirect('index')
+    
+    # Verificar rol correcto
+    if request.session.get('usuario_rol') != 'Médico':
+        return redirect('index')
     return render(request, "medico.html")
 
 def medico_buscar(request):
@@ -184,6 +234,13 @@ def medico_actual(request):
 # PANEL COORDINADOR
 
 def coordinador(request):
+    # Verificar autenticación
+    if 'usuario_id' not in request.session:
+        return redirect('index')
+    
+    # Verificar rol correcto
+    if request.session.get('usuario_rol') != 'Coordinador':
+        return redirect('index')
     return render(request, "coordinador.html")
 
 def coord_derivaciones(request):
