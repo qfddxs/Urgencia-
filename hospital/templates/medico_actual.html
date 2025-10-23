@@ -13,21 +13,159 @@
     <div class="card shadow-sm main-card">
       <div class="card-header bg-white border-0 py-4">
         <h1>Derivación Actual</h1>
-        <p class="mb-0">Consulta de la derivación en curso</p>
+        {% if paciente %}
+          <p class="mb-0">Paciente: {{ paciente.nombre }} (RUT: {{ paciente.rut }})</p>
+        {% else %}
+          <p class="mb-0">Busque un paciente por RUT</p>
+        {% endif %}
       </div>
       <div class="card-body p-4">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Paciente:</strong> Juan Pérez</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Motivo:</strong> Trauma craneoencefálico</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Prestación Requerida:</strong> Cirugía</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Hospital Receptor:</strong> Hospital Rancagua</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Estado:</strong> <span class="badge bg-warning text-dark">En revisión</span></li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Fecha:</strong> 26/09/2025</li>
-        </ul>
-        <a href="/medico/" class="d-block text-center mt-4">Volver al Menú Médico</a>
+        {% if not paciente %}
+          <div class="mb-4">
+            <label for="paciente-rut" class="form-label">RUT del Paciente</label>
+            <input 
+              type="text" 
+              id="paciente-rut" 
+              class="form-control" 
+              placeholder="Ej: 12345678-9" 
+              autocomplete="off">
+            <div id="resultados-busqueda" class="list-group mt-2" style="display: none; position: absolute; z-index: 1000; max-height: 300px; overflow-y: auto; width: calc(100% - 2rem);"></div>
+            <small class="form-text text-muted">Ingrese el RUT del paciente para ver su derivación actual</small>
+          </div>
+          
+          {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+          {% endif %}
+        {% endif %}
+        
+        {% if paciente %}
+          {% if derivacion %}
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>ID Derivación:</strong> 
+                <span>{{ derivacion.id_derivacion }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Paciente:</strong> 
+                <span>{{ derivacion.id_paciente.nombre }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Motivo:</strong> 
+                <span>{{ derivacion.motivo }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Prestación Requerida:</strong> 
+                <span>{{ derivacion.prestacion|default:"No especificada" }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Hospital Receptor:</strong> 
+                <span>{{ derivacion.id_hospital.nombre }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Estado:</strong> 
+                {% if derivacion.estado == 'Pendiente' %}
+                  <span class="badge bg-warning text-dark">{{ derivacion.estado }}</span>
+                {% elif derivacion.estado == 'En revisión' %}
+                  <span class="badge bg-info">{{ derivacion.estado }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ derivacion.estado }}</span>
+                {% endif %}
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>Fecha:</strong> 
+                <span>{{ derivacion.fecha|date:"d/m/Y H:i" }}</span>
+              </li>
+            </ul>
+            
+            <div class="mt-4">
+              <a href="{% url 'medico_ficha' paciente.rut %}" class="btn btn-outline-primary">Ver Ficha Clínica</a>
+              <a href="{% url 'medico_historial' paciente.rut %}" class="btn btn-outline-secondary">Ver Historial Completo</a>
+            </div>
+          {% else %}
+            <div class="alert alert-info" role="alert">
+              Este paciente no tiene derivaciones pendientes o en revisión actualmente.
+            </div>
+            <div class="mt-3">
+              <a href="{% url 'medico_ficha' paciente.rut %}" class="btn btn-outline-primary">Ver Ficha Clínica</a>
+              <a href="{% url 'medico_historial' paciente.rut %}" class="btn btn-outline-secondary">Ver Historial Completo</a>
+            </div>
+          {% endif %}
+        {% endif %}
+        
+        <a href="{% url 'medico' %}" class="d-block text-center mt-4">Volver al Menú Médico</a>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const inputRut = document.getElementById('paciente-rut');
+    
+    if (inputRut) {
+      const resultadosBusqueda = document.getElementById('resultados-busqueda');
+      let timeoutId;
+
+      inputRut.addEventListener('input', function() {
+        const rut = this.value.trim();
+        
+        clearTimeout(timeoutId);
+        
+        if (rut.length < 2) {
+          resultadosBusqueda.style.display = 'none';
+          return;
+        }
+        
+        timeoutId = setTimeout(() => {
+          buscarPaciente(rut);
+        }, 300);
+      });
+
+      function buscarPaciente(rut) {
+        fetch(`/api/buscar-paciente/?rut=${encodeURIComponent(rut)}`)
+          .then(response => response.json())
+          .then(data => {
+            mostrarResultados(data.pacientes);
+          })
+          .catch(error => {
+            console.error('Error al buscar paciente:', error);
+          });
+      }
+
+      function mostrarResultados(pacientes) {
+        resultadosBusqueda.innerHTML = '';
+        
+        if (pacientes.length === 0) {
+          resultadosBusqueda.innerHTML = '<div class="list-group-item text-muted">No se encontraron pacientes</div>';
+          resultadosBusqueda.style.display = 'block';
+          return;
+        }
+        
+        pacientes.forEach(paciente => {
+          const item = document.createElement('a');
+          item.href = `/medico/actual/${paciente.rut}/`;
+          item.className = 'list-group-item list-group-item-action';
+          item.innerHTML = `
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">${paciente.nombre}</h6>
+              <small>${paciente.rut}</small>
+            </div>
+            <small class="text-muted">Edad: ${paciente.edad || 'N/A'} | Previsión: ${paciente.prevision || 'N/A'}</small>
+          `;
+          
+          resultadosBusqueda.appendChild(item);
+        });
+        
+        resultadosBusqueda.style.display = 'block';
+      }
+
+      // Cerrar resultados al hacer clic fuera
+      document.addEventListener('click', function(e) {
+        if (!inputRut.contains(e.target) && !resultadosBusqueda.contains(e.target)) {
+          resultadosBusqueda.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>

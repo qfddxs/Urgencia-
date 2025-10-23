@@ -16,16 +16,103 @@
         <p class="mb-0">Ingrese nombre, RUT o ID para localizar un paciente</p>
       </div>
       <div class="card-body p-4">
-        <form>
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Ej: 12.345.678-9 o Juan Pérez" aria-label="Criterio de búsqueda">
-            <button class="btn btn-primary" type="submit">Buscar</button>
+        <div class="mb-4">
+          <label for="paciente-busqueda" class="form-label">Buscar por RUT o Nombre</label>
+          <input 
+            type="text" 
+            id="paciente-busqueda" 
+            class="form-control" 
+            placeholder="Ej: 12345678-9 o Juan Pérez" 
+            autocomplete="off">
+          <small class="form-text text-muted">Los resultados aparecerán mientras escribe</small>
+        </div>
+
+        <div id="resultados-container" style="display: none;">
+          <h5 class="mb-3">Resultados de búsqueda <span id="contador-resultados"></span></h5>
+          <div id="resultados-lista" class="list-group">
+            <!-- Los resultados se cargarán aquí dinámicamente -->
           </div>
-        </form>
-        <a href="/medico/" class="d-block text-center mt-4">Volver al Menú Médico</a>
+        </div>
+
+        <div id="sin-resultados" class="alert alert-warning" role="alert" style="display: none;">
+          No se encontraron pacientes con ese criterio de búsqueda.
+        </div>
+
+        <a href="{% url 'medico' %}" class="d-block text-center mt-4">Volver al Menú Médico</a>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const inputBusqueda = document.getElementById('paciente-busqueda');
+    const resultadosContainer = document.getElementById('resultados-container');
+    const resultadosLista = document.getElementById('resultados-lista');
+    const contadorResultados = document.getElementById('contador-resultados');
+    const sinResultados = document.getElementById('sin-resultados');
+    let timeoutId;
+
+    inputBusqueda.addEventListener('input', function() {
+      const query = this.value.trim();
+      
+      clearTimeout(timeoutId);
+      
+      // Ocultar todo si no hay búsqueda
+      if (query.length < 2) {
+        resultadosContainer.style.display = 'none';
+        sinResultados.style.display = 'none';
+        return;
+      }
+      
+      // Esperar 300ms después de que el usuario deje de escribir
+      timeoutId = setTimeout(() => {
+        buscarPacientes(query);
+      }, 300);
+    });
+
+    function buscarPacientes(query) {
+      fetch(`/api/buscar-paciente/?rut=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          mostrarResultados(data.pacientes);
+        })
+        .catch(error => {
+          console.error('Error al buscar pacientes:', error);
+        });
+    }
+
+    function mostrarResultados(pacientes) {
+      resultadosLista.innerHTML = '';
+      
+      if (pacientes.length === 0) {
+        resultadosContainer.style.display = 'none';
+        sinResultados.style.display = 'block';
+        return;
+      }
+      
+      sinResultados.style.display = 'none';
+      resultadosContainer.style.display = 'block';
+      contadorResultados.textContent = `(${pacientes.length})`;
+      
+      pacientes.forEach(paciente => {
+        const item = document.createElement('div');
+        item.className = 'list-group-item';
+        item.innerHTML = `
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">${paciente.nombre}</h6>
+              <small class="text-muted">RUT: ${paciente.rut} | Edad: ${paciente.edad || 'N/A'} | Previsión: ${paciente.prevision || 'N/A'}</small>
+            </div>
+            <div class="btn-group" role="group">
+              <a href="/medico/ficha/${paciente.rut}/" class="btn btn-sm btn-outline-primary">Ver Ficha</a>
+              <a href="/medico/historial/${paciente.rut}/" class="btn btn-sm btn-outline-secondary">Historial</a>
+              <a href="/medico/actual/${paciente.rut}/" class="btn btn-sm btn-outline-info">Derivación Actual</a>
+            </div>
+          </div>
+        `;
+        
+        resultadosLista.appendChild(item);
+      });
+    }
+  </script>
 </body>
 </html>

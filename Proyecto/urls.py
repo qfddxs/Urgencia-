@@ -19,9 +19,12 @@ urlpatterns = [
     # Panel Médico 
     path("medico/", views.medico, name="medico"),
     path("medico/buscar", views.medico_buscar, name="medico_buscar"),
-    path("medico/ficha", views.medico_ficha, name="medico_ficha"),
-    path("medico/historial", views.medico_historial, name="medico_historial"),
-    path("medico/actual", views.medico_actual, name="medico_actual"),
+    path("medico/ficha/<str:paciente_rut>/", views.medico_ficha, name="medico_ficha"),
+    path("medico/ficha/", views.medico_ficha, name="medico_ficha_sin_paciente"),
+    path("medico/historial/<str:paciente_rut>/", views.medico_historial, name="medico_historial"),
+    path("medico/historial/", views.medico_historial, name="medico_historial_sin_paciente"),
+    path("medico/actual/<str:paciente_rut>/", views.medico_actual, name="medico_actual"),
+    path("medico/actual/", views.medico_actual, name="medico_actual_sin_paciente"),
 
     # Panel TENS 
     path("tens/", views.tens, name="tens"),

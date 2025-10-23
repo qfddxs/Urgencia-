@@ -13,45 +13,155 @@
     <div class="card shadow-sm main-card">
       <div class="card-header bg-white border-0 py-4">
         <h1>Historial de Derivaciones</h1>
-        <p class="mb-0">Derivaciones registradas previamente en la red</p>
+        {% if paciente %}
+          <p class="mb-0">Paciente: {{ paciente.nombre }} (RUT: {{ paciente.rut }})</p>
+        {% else %}
+          <p class="mb-0">Busque un paciente por RUT</p>
+        {% endif %}
       </div>
       <div class="card-body p-4">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Paciente</th>
-                <th>Motivo</th>
-                <th>Hospital</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>101</td>
-                <td>Juan Pérez</td>
-                <td>Infarto</td>
-                <td>Hospital Rancagua</td>
-                <td>01/09/2025</td>
-                <td><span class="badge bg-success">Aceptada</span></td>
-              </tr>
-              <tr>
-                <td>102</td>
-                <td>Juan Pérez</td>
-                <td>Neurología</td>
-                <td>Hospital San Fernando</td>
-                <td>15/06/2025</td>
-                <td><span class="badge bg-secondary">Finalizada</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <a href="/medico/" class="d-block text-center mt-4">Volver al Menú Médico</a>
+        {% if not paciente %}
+          <div class="mb-4">
+            <label for="paciente-rut" class="form-label">RUT del Paciente</label>
+            <input 
+              type="text" 
+              id="paciente-rut" 
+              class="form-control" 
+              placeholder="Ej: 12345678-9" 
+              autocomplete="off">
+            <div id="resultados-busqueda" class="list-group mt-2" style="display: none; position: absolute; z-index: 1000; max-height: 300px; overflow-y: auto; width: calc(100% - 2rem);"></div>
+            <small class="form-text text-muted">Ingrese el RUT del paciente para ver su historial</small>
+          </div>
+          
+          {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+          {% endif %}
+        {% endif %}
+        
+        {% if paciente %}
+          {% if derivaciones %}
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Motivo</th>
+                    <th>Prestación</th>
+                    <th>Hospital</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for derivacion in derivaciones %}
+                  <tr>
+                    <td>{{ derivacion.id_derivacion }}</td>
+                    <td>{{ derivacion.motivo|truncatewords:5 }}</td>
+                    <td>{{ derivacion.prestacion|default:"N/A" }}</td>
+                    <td>{{ derivacion.id_hospital.nombre }}</td>
+                    <td>{{ derivacion.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                      {% if derivacion.estado == 'Aceptada' %}
+                        <span class="badge bg-success">{{ derivacion.estado }}</span>
+                      {% elif derivacion.estado == 'Pendiente' %}
+                        <span class="badge bg-warning text-dark">{{ derivacion.estado }}</span>
+                      {% elif derivacion.estado == 'Rechazada' %}
+                        <span class="badge bg-danger">{{ derivacion.estado }}</span>
+                      {% else %}
+                        <span class="badge bg-secondary">{{ derivacion.estado }}</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-info" role="alert">
+              Este paciente no tiene derivaciones registradas.
+            </div>
+          {% endif %}
+          
+          <div class="mt-3">
+            <a href="{% url 'medico_ficha' paciente.rut %}" class="btn btn-outline-primary">Ver Ficha Clínica</a>
+            <a href="{% url 'medico_actual' paciente.rut %}" class="btn btn-outline-info">Ver Derivación Actual</a>
+          </div>
+        {% endif %}
+        
+        <a href="{% url 'medico' %}" class="d-block text-center mt-4">Volver al Menú Médico</a>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const inputRut = document.getElementById('paciente-rut');
+    
+    if (inputRut) {
+      const resultadosBusqueda = document.getElementById('resultados-busqueda');
+      let timeoutId;
+
+      inputRut.addEventListener('input', function() {
+        const rut = this.value.trim();
+        
+        clearTimeout(timeoutId);
+        
+        if (rut.length < 2) {
+          resultadosBusqueda.style.display = 'none';
+          return;
+        }
+        
+        timeoutId = setTimeout(() => {
+          buscarPaciente(rut);
+        }, 300);
+      });
+
+      function buscarPaciente(rut) {
+        fetch(`/api/buscar-paciente/?rut=${encodeURIComponent(rut)}`)
+          .then(response => response.json())
+          .then(data => {
+            mostrarResultados(data.pacientes);
+          })
+          .catch(error => {
+            console.error('Error al buscar paciente:', error);
+          });
+      }
+
+      function mostrarResultados(pacientes) {
+        resultadosBusqueda.innerHTML = '';
+        
+        if (pacientes.length === 0) {
+          resultadosBusqueda.innerHTML = '<div class="list-group-item text-muted">No se encontraron pacientes</div>';
+          resultadosBusqueda.style.display = 'block';
+          return;
+        }
+        
+        pacientes.forEach(paciente => {
+          const item = document.createElement('a');
+          item.href = `/medico/historial/${paciente.rut}/`;
+          item.className = 'list-group-item list-group-item-action';
+          item.innerHTML = `
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">${paciente.nombre}</h6>
+              <small>${paciente.rut}</small>
+            </div>
+            <small class="text-muted">Edad: ${paciente.edad || 'N/A'} | Previsión: ${paciente.prevision || 'N/A'}</small>
+          `;
+          
+          resultadosBusqueda.appendChild(item);
+        });
+        
+        resultadosBusqueda.style.display = 'block';
+      }
+
+      // Cerrar resultados al hacer clic fuera
+      document.addEventListener('click', function(e) {
+        if (!inputRut.contains(e.target) && !resultadosBusqueda.contains(e.target)) {
+          resultadosBusqueda.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>

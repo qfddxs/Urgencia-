@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.db import models
 # Importamos los modelos que acabamos de crear
 from .models import Paciente, Derivacion, FichaPaciente, Hospital, Usuario
 
@@ -234,16 +235,110 @@ def medico(request):
     return render(request, "medico.html")
 
 def medico_buscar(request):
-    return render(request, "medico_buscar.html")
+    resultados = []
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Buscar por RUT o nombre
+        resultados = Paciente.objects.filter(
+            models.Q(rut__icontains=query) | 
+            models.Q(nombre__icontains=query)
+        ).order_by('nombre')[:20]  # Limitar a 20 resultados
+    
+    return render(request, "medico_buscar.html", {
+        'resultados': resultados,
+        'query': query
+    })
 
-def medico_ficha(request):
-    return render(request, "medico_ficha.html")
+def medico_ficha(request, paciente_rut=None):
+    paciente = None
+    ficha = None
+    error = None
+    
+    # Si viene un RUT por GET (búsqueda desde el formulario)
+    rut_busqueda = request.GET.get('rut', '').strip()
+    if rut_busqueda:
+        try:
+            paciente = Paciente.objects.get(rut=rut_busqueda)
+            try:
+                ficha = FichaPaciente.objects.get(id_paciente=paciente)
+            except FichaPaciente.DoesNotExist:
+                ficha = None
+        except Paciente.DoesNotExist:
+            error = f"No se encontró ningún paciente con el RUT: {rut_busqueda}"
+    # Si viene un RUT por URL
+    elif paciente_rut:
+        paciente = get_object_or_404(Paciente, rut=paciente_rut)
+        try:
+            ficha = FichaPaciente.objects.get(id_paciente=paciente)
+        except FichaPaciente.DoesNotExist:
+            ficha = None
+    
+    return render(request, "medico_ficha.html", {
+        'paciente': paciente,
+        'ficha': ficha,
+        'error': error
+    })
 
-def medico_historial(request):
-    return render(request, "medico_historial.html")
+def medico_historial(request, paciente_rut=None):
+    paciente = None
+    derivaciones = []
+    error = None
+    
+    # Si viene un RUT por GET (búsqueda desde el formulario)
+    rut_busqueda = request.GET.get('rut', '').strip()
+    if rut_busqueda:
+        try:
+            paciente = Paciente.objects.get(rut=rut_busqueda)
+            derivaciones = Derivacion.objects.filter(
+                id_paciente=paciente
+            ).order_by('-fecha')
+        except Paciente.DoesNotExist:
+            error = f"No se encontró ningún paciente con el RUT: {rut_busqueda}"
+    # Si viene un RUT por URL
+    elif paciente_rut:
+        paciente = get_object_or_404(Paciente, rut=paciente_rut)
+        derivaciones = Derivacion.objects.filter(
+            id_paciente=paciente
+        ).order_by('-fecha')
+    
+    return render(request, "medico_historial.html", {
+        'paciente': paciente,
+        'derivaciones': derivaciones,
+        'error': error
+    })
 
-def medico_actual(request):
-    return render(request, "medico_actual.html")
+def medico_actual(request, paciente_rut=None):
+    paciente = None
+    derivacion_actual = None
+    error = None
+    
+    # Si viene un RUT por GET (búsqueda desde el formulario)
+    rut_busqueda = request.GET.get('rut', '').strip()
+    if rut_busqueda:
+        try:
+            paciente = Paciente.objects.get(rut=rut_busqueda)
+            # Buscar derivaciones pendientes o en revisión
+            derivacion_actual = Derivacion.objects.filter(
+                id_paciente=paciente,
+                estado__in=['Pendiente', 'En revisión']
+            ).order_by('-fecha').first()
+        except Paciente.DoesNotExist:
+            error = f"No se encontró ningún paciente con el RUT: {rut_busqueda}"
+    # Si viene un RUT por URL
+    elif paciente_rut:
+        paciente = get_object_or_404(Paciente, rut=paciente_rut)
+        # Buscar derivaciones pendientes o en revisión
+        derivacion_actual = Derivacion.objects.filter(
+            id_paciente=paciente,
+            estado__in=['Pendiente', 'En revisión']
+        ).order_by('-fecha').first()
+    
+    return render(request, "medico_actual.html", {
+        'paciente': paciente,
+        'derivacion': derivacion_actual,
+        'error': error
+    })
 
 
 # PANEL COORDINADOR
@@ -263,7 +358,43 @@ def gestionar_derivacion(request, derivacion_id, nuevo_estado):
     return redirect('coord_derivaciones')
 
 def coord_camas(request):
-    return render(request, "coord_camas.html")
+    # Obtenemos todos los hospitales con su información de camas
+    hospitales = Hospital.objects.all().order_by('nombre')
+    
+    # Calculamos estadísticas generales
+    total_camas = sum(h.camas_totales for h in hospitales)
+    total_ocupadas = sum(h.camas_ocupadas for h in hospitales)
+    total_disponibles = total_camas - total_ocupadas
+    
+    # Agregamos información calculada a cada hospital
+    hospitales_info = []
+    for hospital in hospitales:
+        disponibles = hospital.camas_totales - hospital.camas_ocupadas
+        porcentaje_ocupacion = (hospital.camas_ocupadas / hospital.camas_totales * 100) if hospital.camas_totales > 0 else 0
+        
+        # Determinar el estado (crítico, advertencia, normal)
+        if porcentaje_ocupacion >= 90:
+            estado = 'critico'
+        elif porcentaje_ocupacion >= 75:
+            estado = 'advertencia'
+        else:
+            estado = 'normal'
+        
+        hospitales_info.append({
+            'hospital': hospital,
+            'disponibles': disponibles,
+            'porcentaje_ocupacion': round(porcentaje_ocupacion, 1),
+            'estado': estado
+        })
+    
+    context = {
+        'hospitales_info': hospitales_info,
+        'total_camas': total_camas,
+        'total_ocupadas': total_ocupadas,
+        'total_disponibles': total_disponibles
+    }
+    
+    return render(request, "coord_camas.html", context)
 
 def coord_reportes(request):
     return render(request, "coord_reportes.html")
