@@ -8,6 +8,7 @@ urlpatterns = [
     # login
     path("", views.index, name="index"),
     path("login", views.login, name="login"),
+    path("logout", views.logout, name="logout"),
 
     # Panel Coordinador 
     path("coordinador/", views.coordinador, name="coordinador"),
