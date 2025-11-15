@@ -43,34 +43,21 @@
             </div>
           </fieldset>
 
-          <fieldset class="mb-4">
-            <legend class="h5 mb-3">Evaluación Inicial</legend>
-            <div class="mb-3">
-              <label for="estado-paciente" class="form-label">Estado del Paciente</label>
-              <select id="estado-paciente" name="estado_paciente" class="form-select" required>
-                <option selected>Estable</option>
-                <option>Inestable</option>
-                <option>Crítico</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="observaciones" class="form-label">Observaciones</label>
-              <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ej: Saturación baja, signos vitales dentro de rango"></textarea>
-            </div>
-          </fieldset>
+
 
           <fieldset class="mb-4">
             <legend class="h5 mb-3">Hospital Receptor</legend>
             <select class="form-select" name="hospital" required>
-              <option selected>Hospital Rancagua</option>
-              <option>Hospital San Fernando</option>
-              <option>Hospital Santa Cruz</option>
+              <option value="">Seleccionar hospital...</option>
+              {% for hospital in hospitales %}
+                <option value="{{ hospital.id_hospital }}">{{ hospital.nombre }}</option>
+              {% endfor %}
             </select>
           </fieldset>
 
           <button type="submit" class="btn btn-primary w-100 py-2">Enviar Derivación</button>
         </form>
-        <a href="{% url 'tens' %}" class="d-block text-center mt-4">Volver al Menú TENS</a>
+        <a href="{% url 'medico' %}" class="d-block text-center mt-4">Volver al Menú Médico</a>
       </div>
     </div>
   </div>

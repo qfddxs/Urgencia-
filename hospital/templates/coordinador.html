@@ -23,12 +23,107 @@
         </div>
       </div>
       <div class="card-body p-4">
+        <!-- Dashboard de Estadísticas -->
+        <h4 class="mb-4">Resumen General</h4>
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="card border-primary">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-2">Derivaciones Pendientes</h6>
+                <h2 class="text-primary mb-0">{{ derivaciones_pendientes }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card border-info">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-2">Derivaciones Hoy</h6>
+                <h2 class="text-info mb-0">{{ derivaciones_hoy }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card border-success">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-2">Camas Disponibles</h6>
+                <h2 class="text-success mb-0">{{ total_disponibles }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card border-{% if porcentaje_ocupacion >= 90 %}danger{% elif porcentaje_ocupacion >= 70 %}warning{% else %}success{% endif %}">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-2">Ocupación</h6>
+                <h2 class="text-{% if porcentaje_ocupacion >= 90 %}danger{% elif porcentaje_ocupacion >= 70 %}warning{% else %}success{% endif %} mb-0">{{ porcentaje_ocupacion }}%</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Derivaciones por Estado -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h6 class="mb-0">Derivaciones por Estado</h6>
+              </div>
+              <div class="card-body">
+                {% for item in derivaciones_por_estado %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span>
+                    {% if item.estado == 'Pendiente' %}
+                      <span class="badge bg-warning text-dark">{{ item.estado }}</span>
+                    {% elif item.estado == 'Aceptada' %}
+                      <span class="badge bg-success">{{ item.estado }}</span>
+                    {% elif item.estado == 'Rechazada' %}
+                      <span class="badge bg-danger">{{ item.estado }}</span>
+                    {% else %}
+                      <span class="badge bg-info">{{ item.estado }}</span>
+                    {% endif %}
+                  </span>
+                  <strong>{{ item.total }}</strong>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h6 class="mb-0">Estado de Hospitales</h6>
+              </div>
+              <div class="card-body">
+                {% for hospital in hospitales %}
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                    <small>{{ hospital.nombre }}</small>
+                    <small>{{ hospital.camas_ocupadas }}/{{ hospital.camas_totales }}</small>
+                  </div>
+                  <div class="progress" style="height: 20px;">
+                    {% with porcentaje=hospital.camas_ocupadas|floatformat:0 total=hospital.camas_totales|floatformat:0 %}
+                    {% widthratio hospital.camas_ocupadas hospital.camas_totales 100 as ocupacion %}
+                    <div class="progress-bar {% if ocupacion >= 90 %}bg-danger{% elif ocupacion >= 70 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" 
+                         style="width: {{ ocupacion }}%">
+                      {{ ocupacion }}%
+                    </div>
+                    {% endwith %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menú de Acciones -->
+        <h4 class="mb-3">Acciones Rápidas</h4>
         <div class="row">
           <div class="col-md-4 mb-4">
             <div class="card h-100 text-center menu-card">
               <div class="card-body">
-                <h5 class="card-title">Derivaciones Pendientes</h5>
-                <p class="card-text text-muted small">Revisa y gestiona solicitudes de derivación en curso.</p>
+                <h5 class="card-title">Gestionar Derivaciones</h5>
+                <p class="card-text text-muted small">Revisa y gestiona solicitudes de derivación.</p>
                 <a href="/coordinador/derivaciones" class="btn btn-primary">Ver Derivaciones</a>
               </div>
             </div>
@@ -36,8 +131,8 @@
           <div class="col-md-4 mb-4">
             <div class="card h-100 text-center menu-card">
               <div class="card-body">
-                <h5 class="card-title">Estado de Camas</h5>
-                <p class="card-text text-muted small">Consulta la disponibilidad de camas en la red hospitalaria.</p>
+                <h5 class="card-title">Gestión de Camas</h5>
+                <p class="card-text text-muted small">Administra la disponibilidad de camas.</p>
                 <a href="/coordinador/camas" class="btn btn-primary">Ver Camas</a>
               </div>
             </div>
@@ -46,13 +141,12 @@
             <div class="card h-100 text-center menu-card">
               <div class="card-body">
                 <h5 class="card-title">Reportes y Métricas</h5>
-                <p class="card-text text-muted small">Genera indicadores sobre derivaciones y ocupación hospitalaria.</p>
+                <p class="card-text text-muted small">Genera indicadores del sistema.</p>
                 <a href="/coordinador/reportes" class="btn btn-primary">Ver Reportes</a>
               </div>
             </div>
           </div>
         </div>
-        <a href="/" class="d-block text-center mt-3">Cerrar sesión</a>
       </div>
     </div>
   </div>

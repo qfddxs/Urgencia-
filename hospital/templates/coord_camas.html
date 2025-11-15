@@ -16,39 +16,99 @@
         <p class="mb-0">Disponibilidad actual en hospitales de la red</p>
       </div>
       <div class="card-body p-4">
+        <!-- Resumen General -->
+        <div class="row mb-4">
+          {% for info in hospitales_info %}
+          <div class="col-md-4 mb-3">
+            <div class="card border-{{ info.estado }}">
+              <div class="card-header bg-{{ info.estado }} text-white">
+                <h6 class="mb-0">{{ info.hospital.nombre }}</h6>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-4">
+                    <h4 class="text-success mb-0">{{ info.disponibles }}</h4>
+                    <small class="text-muted">Disponibles</small>
+                  </div>
+                  <div class="col-4">
+                    <h4 class="text-danger mb-0">{{ info.hospital.camas_ocupadas }}</h4>
+                    <small class="text-muted">Ocupadas</small>
+                  </div>
+                  <div class="col-4">
+                    <h4 class="text-primary mb-0">{{ info.hospital.camas_totales }}</h4>
+                    <small class="text-muted">Total</small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-{{ info.estado }}" 
+                         role="progressbar" 
+                         style="width: {{ info.porcentaje }}%">
+                      {{ info.porcentaje }}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Tabla Detallada -->
         <div class="table-responsive">
-          <table class="table table-hover text-center align-middle">
+          <table class="table table-hover align-middle">
             <thead class="table-light">
               <tr>
-                <th class="text-start">Hospital</th>
-                <th>Camas Libres</th>
-                <th>Camas Ocupadas</th>
-                <th>Total</th>
+                <th>Hospital</th>
+                <th class="text-center">Camas Disponibles</th>
+                <th class="text-center">Camas Ocupadas</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Ocupación</th>
+                <th class="text-center">Estado</th>
               </tr>
             </thead>
             <tbody>
+              {% for info in hospitales_info %}
               <tr>
-                <td class="text-start">Hospital Rancagua</td>
-                <td><span class="badge bg-success fs-6">12</span></td>
-                <td>48</td>
-                <td>60</td>
+                <td><strong>{{ info.hospital.nombre }}</strong></td>
+                <td class="text-center">
+                  <span class="badge bg-success fs-6">{{ info.disponibles }}</span>
+                </td>
+                <td class="text-center">{{ info.hospital.camas_ocupadas }}</td>
+                <td class="text-center">{{ info.hospital.camas_totales }}</td>
+                <td class="text-center">
+                  <strong class="text-{{ info.estado }}">{{ info.porcentaje }}%</strong>
+                </td>
+                <td class="text-center">
+                  {% if info.estado == 'success' %}
+                    <span class="badge bg-success">Disponible</span>
+                  {% elif info.estado == 'warning' %}
+                    <span class="badge bg-warning text-dark">Ocupación Media</span>
+                  {% else %}
+                    <span class="badge bg-danger">Capacidad Crítica</span>
+                  {% endif %}
+                </td>
               </tr>
+              {% empty %}
               <tr>
-                <td class="text-start">Hospital San Fernando</td>
-                <td><span class="badge bg-success fs-6">5</span></td>
-                <td>25</td>
-                <td>30</td>
+                <td colspan="6" class="text-center text-muted py-4">No hay hospitales registrados.</td>
               </tr>
-              <tr>
-                <td class="text-start">Hospital Santa Cruz</td>
-                <td><span class="badge bg-warning fs-6">3</span></td>
-                <td>17</td>
-                <td>20</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
-        <a href="/coordinador/" class="d-block text-center mt-4">Volver al Menú Coordinador</a>
+
+        <!-- Leyenda -->
+        <div class="alert alert-info mt-4">
+          <h6 class="alert-heading">Leyenda de Estados:</h6>
+          <ul class="mb-0">
+            <li><span class="badge bg-success">Disponible</span> - Ocupación menor al 70%</li>
+            <li><span class="badge bg-warning text-dark">Ocupación Media</span> - Ocupación entre 70% y 90%</li>
+            <li><span class="badge bg-danger">Capacidad Crítica</span> - Ocupación mayor al 90%</li>
+          </ul>
+        </div>
+
+        <a href="{% url 'coordinador' %}" class="d-block text-center mt-4">Volver al Menú Coordinador</a>
       </div>
     </div>
   </div>

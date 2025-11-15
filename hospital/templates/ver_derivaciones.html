@@ -8,60 +8,216 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+    }
+    
+    .card {
+      border-radius: 20px;
+      border: none;
+    }
+    
+    .card-header {
+      background: #6c5ce7;
+      color: white;
+      border-radius: 20px 20px 0 0;
+      padding: 2rem;
+    }
+    
+    .stats-card {
+      background: white;
+      border: 2px solid #f1f3f5;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stats-card h3 {
+      color: #6c5ce7;
+      font-weight: 700;
+    }
+    
+    .table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .table thead {
+      background: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .table thead th {
+      color: #495057;
+      font-weight: 600;
+      padding: 1rem;
+      border: none;
+    }
+    
+    .table tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9ff;
+      transform: translateX(4px);
+    }
+    
+    .table tbody td {
+      padding: 1rem;
+      vertical-align: middle;
+    }
+    
+    .alert-info {
+      background: #e3f2fd;
+      border: 2px solid #90caf9;
+      border-radius: 12px;
+      color: #1976d2;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-light">
   <div class="container my-5">
-    <div class="card shadow-sm main-card">
-      <div class="card-header bg-white border-0 py-4">
-        <h1>Derivaciones Registradas</h1>
-        <p class="mb-0">Listado de todas las derivaciones iniciadas</p>
+    <div class="card shadow-lg border-0">
+      <div class="card-header border-0 py-4">
+        <div class="d-flex align-items-center">
+          <i class="fa fa-hospital fa-2x me-3"></i>
+          <div>
+            <h1 class="mb-0">Derivaciones Registradas</h1>
+            <small>Listado de todas las derivaciones del sistema</small>
+          </div>
+        </div>
       </div>
       <div class="card-body p-4">
+        <!-- Estadística rápida -->
+        <div class="stats-card">
+          <div class="row text-center">
+            <div class="col-md-4">
+              <h3 class="mb-1">{{ derivaciones|length }}</h3>
+              <small class="text-muted">Total Derivaciones</small>
+            </div>
+            <div class="col-md-4">
+              <h3 class="mb-1"><i class="fa fa-chart-line"></i></h3>
+              <small class="text-muted">Sistema Actualizado</small>
+            </div>
+            <div class="col-md-4">
+              <h3 class="mb-1"><i class="fa fa-eye"></i></h3>
+              <small class="text-muted">{% if request.session.usuario_rol == 'TENS' %}Solo Lectura{% else %}Gestión Completa{% endif %}</small>
+            </div>
+          </div>
+        </div>
+
+        {% if request.session.usuario_rol == 'TENS' %}
+        <div class="alert alert-info border-0">
+          <i class="fa fa-info-circle"></i> 
+          <strong>Modo Solo Lectura:</strong> Como TENS, puedes consultar las derivaciones pero no modificarlas.
+        </div>
+        {% endif %}
+
+        <!-- Tabla de derivaciones -->
         <div class="table-responsive">
           <table class="table table-hover align-middle">
-            <thead class="table-light">
+            <thead>
               <tr>
-                <th>ID</th>
-                <th>Paciente</th>
-                <th>Motivo</th>
-                <th>Hospital</th>
-                <th>Estado</th>
-                <th>Fecha</th>
-                <th class="text-end">Acciones</th>
+                <th><i class="fa fa-hashtag"></i> ID</th>
+                <th><i class="fa fa-user"></i> Paciente</th>
+                <th><i class="fa fa-notes-medical"></i> Motivo</th>
+                <th><i class="fa fa-hospital-alt"></i> Hospital</th>
+                <th><i class="fa fa-info-circle"></i> Estado</th>
+                <th><i class="fa fa-calendar"></i> Fecha</th>
+                <th class="text-center"><i class="fa fa-cog"></i> Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {# Bucle para iterar sobre las derivaciones pasadas desde la vista #}
               {% for derivacion in derivaciones %}
               <tr>
-                <td>{{ derivacion.id }}</td>
-                <td>{{ derivacion.paciente.nombre }}</td> {# Asumiendo que hay una relación con un paciente #}
-                <td>{{ derivacion.motivo }}</td>
-                <td>{{ derivacion.hospital_receptor }}</td>
+                <td><strong>#{{ derivacion.id_derivacion }}</strong></td>
+                <td>{{ derivacion.id_paciente.nombre }}</td>
+                <td>{{ derivacion.motivo|truncatewords:8 }}</td>
                 <td>
-                  {# Lógica para mostrar un badge de color según el estado #}
+                  {{ derivacion.id_hospital.nombre }}
+                  <br>
+                  <small class="text-muted">
+                    <i class="fa fa-bed"></i> {{ derivacion.id_hospital.camas_disponibles }} camas
+                  </small>
+                </td>
+                <td>
                   {% if derivacion.estado == 'Aceptada' %}
-                    <span class="badge bg-success">{{ derivacion.estado }}</span>
+                    <span class="badge bg-success"><i class="fa fa-check"></i> {{ derivacion.estado }}</span>
                   {% elif derivacion.estado == 'Pendiente' %}
-                    <span class="badge bg-warning text-dark">{{ derivacion.estado }}</span>
+                    <span class="badge bg-warning text-dark"><i class="fa fa-clock"></i> {{ derivacion.estado }}</span>
+                  {% elif derivacion.estado == 'Rechazada' %}
+                    <span class="badge bg-danger"><i class="fa fa-times"></i> {{ derivacion.estado }}</span>
                   {% else %}
-                    <span class="badge bg-secondary">{{ derivacion.estado }}</span>
+                    <span class="badge bg-info"><i class="fa fa-eye"></i> {{ derivacion.estado }}</span>
                   {% endif %}
                 </td>
-                <td>{{ derivacion.fecha|date:"d/m/Y" }}</td>
-                <td class="text-end">
-                  <a href="{% url 'editar_derivacion' derivacion.id %}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-pencil-alt"></i> Editar</a>
-                  <a href="{% url 'borrar_derivacion' derivacion.id %}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i> Borrar</a>
+                <td>{{ derivacion.fecha|date:"d/m/Y H:i" }}</td>
+                <td class="text-center">
+                  {% if request.session.usuario_rol == 'Médico' %}
+                    <div class="btn-group btn-group-sm" role="group">
+                      <a href="{% url 'editar_derivacion' derivacion.id_derivacion %}" 
+                         class="btn btn-outline-primary" title="Editar">
+                        <i class="fa fa-edit"></i>
+                      </a>
+                      <a href="{% url 'borrar_derivacion' derivacion.id_derivacion %}" 
+                         class="btn btn-outline-danger" title="Borrar"
+                         onclick="return confirm('¿Está seguro de eliminar esta derivación?')">
+                        <i class="fa fa-trash"></i>
+                      </a>
+                    </div>
+                  {% else %}
+                    <span class="badge bg-secondary">
+                      <i class="fa fa-lock"></i> Solo lectura
+                    </span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="text-center py-5">
+                  <i class="fa fa-inbox fa-4x text-muted mb-3 d-block"></i>
+                  <p class="text-muted">No hay derivaciones registradas.</p>
                 </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-        <a href="{% url 'tens' %}" class="d-block text-center mt-4">Volver al Menú TENS</a>
+        
+        <div class="text-center mt-4">
+          {% if request.session.usuario_rol == 'Médico' %}
+            <a href="{% url 'medico' %}" class="btn btn-outline-secondary btn-lg">
+              <i class="fa fa-arrow-left"></i> Volver al Menú Médico
+            </a>
+          {% else %}
+            <a href="{% url 'tens' %}" class="btn btn-outline-secondary btn-lg">
+              <i class="fa fa-arrow-left"></i> Volver al Menú TENS
+            </a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Animación de entrada de filas
+    document.addEventListener('DOMContentLoaded', function() {
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(-20px)';
+        setTimeout(() => {
+          row.style.transition = 'all 0.5s ease';
+          row.style.opacity = '1';
+          row.style.transform = 'translateX(0)';
+        }, index * 100);
+      });
+    });
+  </script>
 </body>
 </html>

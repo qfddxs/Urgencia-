@@ -62,6 +62,36 @@ class Hospital(models.Model):
     
     def __str__(self):
         return self.nombre
+    
+    def tiene_camas_disponibles(self):
+        """Verifica si hay camas disponibles"""
+        return self.camas_ocupadas < self.camas_totales
+    
+    def camas_disponibles(self):
+        """Retorna el número de camas disponibles"""
+        return max(0, self.camas_totales - self.camas_ocupadas)
+    
+    def ocupar_cama(self):
+        """Ocupa una cama si hay disponibilidad"""
+        if self.tiene_camas_disponibles():
+            self.camas_ocupadas += 1
+            self.save()
+            return True
+        return False
+    
+    def liberar_cama(self):
+        """Libera una cama ocupada"""
+        if self.camas_ocupadas > 0:
+            self.camas_ocupadas -= 1
+            self.save()
+            return True
+        return False
+    
+    def porcentaje_ocupacion(self):
+        """Calcula el porcentaje de ocupación"""
+        if self.camas_totales == 0:
+            return 0
+        return round((self.camas_ocupadas / self.camas_totales) * 100, 1)
 
 
 class Derivacion(models.Model):

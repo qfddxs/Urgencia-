@@ -3,31 +3,210 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Derivación Actual</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="container my-5">
     <div class="card shadow-sm main-card">
       <div class="card-header bg-white border-0 py-4">
-        <h1>Derivación Actual</h1>
-        <p class="mb-0">Consulta de la derivación en curso</p>
+        <h1><i class="fa fa-clipboard-check"></i> Derivación Actual</h1>
+        <p class="mb-0">Consulta la derivación activa del paciente</p>
       </div>
       <div class="card-body p-4">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Paciente:</strong> Juan Pérez</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Motivo:</strong> Trauma craneoencefálico</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Prestación Requerida:</strong> Cirugía</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Hospital Receptor:</strong> Hospital Rancagua</li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Estado:</strong> <span class="badge bg-warning text-dark">En revisión</span></li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Fecha:</strong> 26/09/2025</li>
-        </ul>
-        <a href="/medico/" class="d-block text-center mt-4">Volver al Menú Médico</a>
+        <!-- Formulario de Búsqueda con Autocompletado -->
+        <form method="GET" action="{% url 'medico_actual' %}" class="mb-4">
+          <div class="position-relative">
+            <div class="input-group">
+              <input type="text" class="form-control" id="rut-input-actual" name="rut" 
+                     placeholder="Ingrese nombre o RUT del paciente..." 
+                     value="{% if paciente %}{{ paciente.rut }}{% endif %}" 
+                     autocomplete="off"
+                     required>
+              <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search"></i> Buscar
+              </button>
+            </div>
+            <div id="sugerencias-actual" class="list-group position-absolute w-100" style="z-index: 1000; display: none; max-height: 300px; overflow-y: auto;"></div>
+          </div>
+        </form>
+
+        {% if paciente %}
+          <!-- Información del Paciente -->
+          <div class="alert alert-info">
+            <strong><i class="fa fa-user"></i> Paciente:</strong> {{ paciente.nombre }} (RUT: {{ paciente.rut }})
+          </div>
+
+          {% if derivacion %}
+            <!-- Derivación Activa -->
+            <div class="card border-{% if derivacion.estado == 'Aceptada' %}success{% elif derivacion.estado == 'Pendiente' %}warning{% else %}info{% endif %}">
+              <div class="card-header bg-{% if derivacion.estado == 'Aceptada' %}success{% elif derivacion.estado == 'Pendiente' %}warning{% else %}info{% endif %} text-white">
+                <h5 class="mb-0">
+                  <i class="fa fa-hospital"></i> Derivación #{{ derivacion.id_derivacion }}
+                  <span class="float-end">
+                    {% if derivacion.estado == 'Aceptada' %}
+                      <span class="badge bg-light text-success">{{ derivacion.estado }}</span>
+                    {% elif derivacion.estado == 'Pendiente' %}
+                      <span class="badge bg-light text-warning">{{ derivacion.estado }}</span>
+                    {% else %}
+                      <span class="badge bg-light text-info">{{ derivacion.estado }}</span>
+                    {% endif %}
+                  </span>
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <strong><i class="fa fa-calendar"></i> Fecha de Registro:</strong><br>
+                    {{ derivacion.fecha|date:"d/m/Y H:i" }}
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <strong><i class="fa fa-hospital-alt"></i> Hospital Destino:</strong><br>
+                    {{ derivacion.id_hospital.nombre }}
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <strong><i class="fa fa-user-md"></i> Médico Solicitante:</strong><br>
+                    {{ derivacion.id_usuario.nombre }}
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <strong><i class="fa fa-bed"></i> Disponibilidad de Camas:</strong><br>
+                    <span class="badge bg-{% if derivacion.id_hospital.camas_disponibles > 5 %}success{% elif derivacion.id_hospital.camas_disponibles > 0 %}warning{% else %}danger{% endif %}">
+                      {{ derivacion.id_hospital.camas_disponibles }}/{{ derivacion.id_hospital.camas_totales }} disponibles
+                    </span>
+                  </div>
+                  <div class="col-12 mb-3">
+                    <strong><i class="fa fa-notes-medical"></i> Motivo:</strong><br>
+                    {{ derivacion.motivo }}
+                  </div>
+                  {% if derivacion.prestacion %}
+                  <div class="col-12 mb-3">
+                    <strong><i class="fa fa-stethoscope"></i> Prestación Requerida:</strong><br>
+                    {{ derivacion.prestacion }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                {% if derivacion.estado == 'Aceptada' %}
+                  <div class="alert alert-success mb-0">
+                    <i class="fa fa-check-circle"></i> 
+                    <strong>Derivación Aceptada</strong> - El paciente tiene una cama asignada en {{ derivacion.id_hospital.nombre }}
+                  </div>
+                {% elif derivacion.estado == 'Pendiente' %}
+                  <div class="alert alert-warning mb-0">
+                    <i class="fa fa-clock"></i> 
+                    <strong>Pendiente de Revisión</strong> - La derivación está siendo evaluada por el coordinador
+                  </div>
+                {% elif derivacion.estado == 'En revisión' %}
+                  <div class="alert alert-info mb-0">
+                    <i class="fa fa-eye"></i> 
+                    <strong>En Revisión</strong> - El coordinador está evaluando la derivación
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="row mt-4">
+              <div class="col-md-6 mb-3">
+                <a href="{% url 'editar_derivacion' derivacion.id_derivacion %}" class="btn btn-warning w-100">
+                  <i class="fa fa-edit"></i> Editar Derivación
+                </a>
+              </div>
+              <div class="col-md-6 mb-3">
+                <a href="{% url 'medico_historial' %}?rut={{ paciente.rut }}" class="btn btn-secondary w-100">
+                  <i class="fa fa-history"></i> Ver Historial Completo
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <div class="alert alert-warning">
+              <i class="fa fa-exclamation-triangle"></i> 
+              Este paciente no tiene derivaciones activas.
+            </div>
+            <a href="{% url 'registrar_derivacion' %}" class="btn btn-success">
+              <i class="fa fa-plus-circle"></i> Registrar Nueva Derivación
+            </a>
+          {% endif %}
+        {% endif %}
+
+        <a href="{% url 'medico' %}" class="d-block text-center mt-4">
+          <i class="fa fa-arrow-left"></i> Volver al Menú Médico
+        </a>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const inputRut = document.getElementById('rut-input-actual');
+    const sugerenciasDiv = document.getElementById('sugerencias-actual');
+    let timeoutId;
+
+    inputRut.addEventListener('input', function() {
+      const query = this.value.trim();
+      clearTimeout(timeoutId);
+      
+      if (query.length < 2) {
+        sugerenciasDiv.style.display = 'none';
+        return;
+      }
+      
+      timeoutId = setTimeout(() => {
+        fetch(`/medico/buscar?busqueda=${encodeURIComponent(query)}`)
+          .then(response => response.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const tbody = doc.querySelector('tbody');
+            
+            if (tbody && tbody.children.length > 0) {
+              sugerenciasDiv.innerHTML = '';
+              
+              Array.from(tbody.children).forEach(row => {
+                const rut = row.children[0].textContent.trim();
+                const nombre = row.children[1].textContent.trim();
+                const edad = row.children[2].textContent.trim();
+                
+                const item = document.createElement('a');
+                item.href = '#';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <strong>${nombre}</strong><br>
+                      <small class="text-muted">RUT: ${rut} | ${edad}</small>
+                    </div>
+                    <i class="fa fa-arrow-right text-muted"></i>
+                  </div>
+                `;
+                
+                item.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  inputRut.value = rut;
+                  sugerenciasDiv.style.display = 'none';
+                  inputRut.form.submit();
+                });
+                
+                sugerenciasDiv.appendChild(item);
+              });
+              
+              sugerenciasDiv.style.display = 'block';
+            } else {
+              sugerenciasDiv.innerHTML = '<div class="list-group-item text-muted">No se encontraron resultados</div>';
+              sugerenciasDiv.style.display = 'block';
+            }
+          });
+      }, 300);
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!inputRut.contains(e.target) && !sugerenciasDiv.contains(e.target)) {
+        sugerenciasDiv.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

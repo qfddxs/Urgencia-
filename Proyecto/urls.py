@@ -23,6 +23,10 @@ urlpatterns = [
     path("medico/ficha", views.medico_ficha, name="medico_ficha"),
     path("medico/historial", views.medico_historial, name="medico_historial"),
     path("medico/actual", views.medico_actual, name="medico_actual"),
+    path("medico/derivacion", views.registrar_derivacion, name="registrar_derivacion"),
+    path("medico/derivaciones", views.ver_derivaciones, name="ver_derivaciones"),
+    path('medico/derivacion/editar/<int:derivacion_id>/', views.editar_derivacion, name='editar_derivacion'),
+    path('medico/derivacion/borrar/<int:derivacion_id>/', views.borrar_derivacion, name='borrar_derivacion'),
 
     # Panel TENS 
     path("tens/", views.tens, name="tens"),
@@ -30,8 +34,5 @@ urlpatterns = [
     path("tens/fichas", views.ver_fichas, name="ver_fichas"),
     path('tens/ficha/editar/<str:paciente_rut>/', views.editar_paciente, name='editar_paciente'),
     path('tens/ficha/borrar/<str:paciente_rut>/', views.borrar_paciente, name='borrar_paciente'),
-    path("tens/derivacion", views.registrar_derivacion, name="registrar_derivacion"),
     path("tens/derivaciones", views.ver_derivaciones, name="ver_derivaciones"),
-    path('tens/derivacion/editar/<int:derivacion_id>/', views.editar_derivacion, name='editar_derivacion'),
-    path('tens/derivacion/borrar/<int:derivacion_id>/', views.borrar_derivacion, name='borrar_derivacion'),
 ]
