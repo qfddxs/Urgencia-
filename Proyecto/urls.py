@@ -13,6 +13,7 @@ urlpatterns = [
     # Panel Coordinador 
     path("coordinador/", views.coordinador, name="coordinador"),
     path("coordinador/derivaciones", views.coord_derivaciones, name="coord_derivaciones"),
+    path("coordinador/buscar-pacientes", views.buscar_pacientes_coord, name="buscar_pacientes_coord"),
     path('coordinador/derivacion/gestionar/<int:derivacion_id>/<str:nuevo_estado>/', views.gestionar_derivacion, name='gestionar_derivacion'),
     path("coordinador/camas", views.coord_camas, name="coord_camas"),
     path("coordinador/reportes", views.coord_reportes, name="coord_reportes"),

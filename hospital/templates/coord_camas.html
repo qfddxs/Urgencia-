@@ -6,110 +6,448 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estado de Camas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{% static 'style.css' %}">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem 0;
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      padding: 3rem;
+      margin: 3rem auto;
+      max-width: 1400px;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    .header-title {
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.8s ease-in;
+    }
+
+    .hospital-card {
+      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+      animation: slideUp 0.5s ease-out;
+      animation-fill-mode: both;
+      position: relative;
+      overflow: hidden;
+      color: #ffffff;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hospital-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .hospital-card.disponible::before {
+      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .hospital-card.media::before {
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .hospital-card.critica::before {
+      background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .hospital-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+    }
+
+    .hospital-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .hospital-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hospital-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .icon-disponible {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .icon-media {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .icon-critica {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 15px;
+      background: rgba(102, 126, 234, 0.05);
+      transition: all 0.3s ease;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .stat-box:hover {
+      background: rgba(102, 126, 234, 0.1);
+      transform: scale(1.05);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .stat-disponible { color: #43e97b; }
+    .stat-ocupada { color: #fa709a; }
+    .stat-total { color: #667eea; }
+
+    .progress-container {
+      margin-bottom: 1rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .progress-glass {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 15px;
+      height: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-custom {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      transition: width 1.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-custom::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-disponible {
+      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .progress-media {
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .progress-critica {
+      background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .badge-status {
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-disponible {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: white;
+    }
+
+    .badge-media {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      color: #333;
+    }
+
+    .badge-critica {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: white;
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .legend-card {
+      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 3rem;
+      animation: slideUp 0.7s ease-out;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .legend-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hospital-card:nth-child(1) { animation-delay: 0.1s; }
+    .hospital-card:nth-child(2) { animation-delay: 0.2s; }
+    .hospital-card:nth-child(3) { animation-delay: 0.3s; }
+    .hospital-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: white;
+    }
+
+    .empty-state i {
+      font-size: 5rem;
+      opacity: 0.5;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <div class="card shadow-sm main-card">
-      <div class="card-header bg-white border-0 py-4">
-        <h1>Estado de Camas</h1>
-        <p class="mb-0">Disponibilidad actual en hospitales de la red</p>
+  <div class="container-fluid px-4">
+    <div class="glass-container">
+      <!-- Header -->
+      <div class="mb-5 pb-3" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h1 class="header-title mb-3" style="font-size: 2.5rem;">
+              <i class="fas fa-bed me-3"></i>Estado de Camas
+            </h1>
+            <p class="text-white mb-0" style="font-size: 1.1rem;">
+              <i class="fas fa-hospital me-2"></i>Disponibilidad actual en hospitales de la red
+            </p>
+          </div>
+          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="font-size: 1rem; white-space: nowrap;">
+            <i class="fas fa-arrow-left me-2"></i>Volver al Menú
+          </a>
+        </div>
       </div>
-      <div class="card-body p-4">
-        <!-- Resumen General -->
-        <div class="row mb-4">
-          {% for info in hospitales_info %}
-          <div class="col-md-4 mb-3">
-            <div class="card border-{{ info.estado }}">
-              <div class="card-header bg-{{ info.estado }} text-white">
-                <h6 class="mb-0">{{ info.hospital.nombre }}</h6>
-              </div>
-              <div class="card-body">
-                <div class="row text-center">
-                  <div class="col-4">
-                    <h4 class="text-success mb-0">{{ info.disponibles }}</h4>
-                    <small class="text-muted">Disponibles</small>
-                  </div>
-                  <div class="col-4">
-                    <h4 class="text-danger mb-0">{{ info.hospital.camas_ocupadas }}</h4>
-                    <small class="text-muted">Ocupadas</small>
-                  </div>
-                  <div class="col-4">
-                    <h4 class="text-primary mb-0">{{ info.hospital.camas_totales }}</h4>
-                    <small class="text-muted">Total</small>
-                  </div>
-                </div>
-                <div class="mt-3">
-                  <div class="progress" style="height: 25px;">
-                    <div class="progress-bar bg-{{ info.estado }}" 
-                         role="progressbar" 
-                         style="width: {{ info.porcentaje }}%">
-                      {{ info.porcentaje }}%
-                    </div>
-                  </div>
-                </div>
+
+      <!-- Lista de Hospitales -->
+      {% for info in hospitales_info %}
+      <div class="hospital-card {% if info.estado == 'success' %}disponible{% elif info.estado == 'warning' %}media{% else %}critica{% endif %}">
+        <div class="hospital-header">
+          <div class="d-flex align-items-center gap-3">
+            <div class="hospital-icon {% if info.estado == 'success' %}icon-disponible{% elif info.estado == 'warning' %}icon-media{% else %}icon-critica{% endif %}">
+              <i class="fas fa-hospital"></i>
+            </div>
+            <div>
+              <div class="hospital-name">{{ info.hospital.nombre }}</div>
+              <div>
+                {% if info.estado == 'success' %}
+                  <span class="badge-status badge-disponible">
+                    <i class="fas fa-check-circle"></i>Disponible
+                  </span>
+                {% elif info.estado == 'warning' %}
+                  <span class="badge-status badge-media">
+                    <i class="fas fa-exclamation-triangle"></i>Ocupación Media
+                  </span>
+                {% else %}
+                  <span class="badge-status badge-critica">
+                    <i class="fas fa-exclamation-circle"></i>Capacidad Crítica
+                  </span>
+                {% endif %}
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
 
-        <!-- Tabla Detallada -->
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Hospital</th>
-                <th class="text-center">Camas Disponibles</th>
-                <th class="text-center">Camas Ocupadas</th>
-                <th class="text-center">Total</th>
-                <th class="text-center">Ocupación</th>
-                <th class="text-center">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for info in hospitales_info %}
-              <tr>
-                <td><strong>{{ info.hospital.nombre }}</strong></td>
-                <td class="text-center">
-                  <span class="badge bg-success fs-6">{{ info.disponibles }}</span>
-                </td>
-                <td class="text-center">{{ info.hospital.camas_ocupadas }}</td>
-                <td class="text-center">{{ info.hospital.camas_totales }}</td>
-                <td class="text-center">
-                  <strong class="text-{{ info.estado }}">{{ info.porcentaje }}%</strong>
-                </td>
-                <td class="text-center">
-                  {% if info.estado == 'success' %}
-                    <span class="badge bg-success">Disponible</span>
-                  {% elif info.estado == 'warning' %}
-                    <span class="badge bg-warning text-dark">Ocupación Media</span>
-                  {% else %}
-                    <span class="badge bg-danger">Capacidad Crítica</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="6" class="text-center text-muted py-4">No hay hospitales registrados.</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-number stat-disponible">{{ info.disponibles }}</div>
+            <div class="stat-label">
+              <i class="fas fa-bed me-1"></i>Disponibles
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number stat-ocupada">{{ info.hospital.camas_ocupadas }}</div>
+            <div class="stat-label">
+              <i class="fas fa-user-injured me-1"></i>Ocupadas
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number stat-total">{{ info.hospital.camas_totales }}</div>
+            <div class="stat-label">
+              <i class="fas fa-hospital-alt me-1"></i>Total
+            </div>
+          </div>
         </div>
 
-        <!-- Leyenda -->
-        <div class="alert alert-info mt-4">
-          <h6 class="alert-heading">Leyenda de Estados:</h6>
-          <ul class="mb-0">
-            <li><span class="badge bg-success">Disponible</span> - Ocupación menor al 70%</li>
-            <li><span class="badge bg-warning text-dark">Ocupación Media</span> - Ocupación entre 70% y 90%</li>
-            <li><span class="badge bg-danger">Capacidad Crítica</span> - Ocupación mayor al 90%</li>
-          </ul>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span><i class="fas fa-chart-bar me-1"></i>Nivel de Ocupación</span>
+            <span>{{ info.porcentaje }}%</span>
+          </div>
+          <div class="progress-glass">
+            <div class="progress-bar-custom {% if info.estado == 'success' %}progress-disponible{% elif info.estado == 'warning' %}progress-media{% else %}progress-critica{% endif %}" 
+                 style="width: {{ info.porcentaje }}%">
+              {{ info.porcentaje }}%
+            </div>
+          </div>
         </div>
-
-        <a href="{% url 'coordinador' %}" class="d-block text-center mt-4">Volver al Menú Coordinador</a>
       </div>
+      {% empty %}
+      <div class="empty-state">
+        <i class="fas fa-hospital"></i>
+        <h3>No hay hospitales registrados</h3>
+        <p>No se encontraron hospitales en el sistema.</p>
+      </div>
+      {% endfor %}
+
+      <!-- Leyenda -->
+      <div class="legend-card">
+        <div class="legend-title">
+          <i class="fas fa-info-circle"></i>Leyenda de Estados
+        </div>
+        <div class="legend-item">
+          <span class="badge-status badge-disponible">
+            <i class="fas fa-check-circle"></i>Disponible
+          </span>
+          <span>Ocupación menor al 70% - Capacidad óptima para recibir derivaciones</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge-status badge-media">
+            <i class="fas fa-exclamation-triangle"></i>Ocupación Media
+          </span>
+          <span>Ocupación entre 70% y 90% - Capacidad limitada, evaluar prioridades</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge-status badge-critica">
+            <i class="fas fa-exclamation-circle"></i>Capacidad Crítica
+          </span>
+          <span>Ocupación mayor al 90% - Capacidad casi completa, derivaciones restringidas</span>
+        </div>
+      </div>
+
+
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

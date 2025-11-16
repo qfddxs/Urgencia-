@@ -539,6 +539,37 @@ def coord_derivaciones(request):
     
     return render(request, "coord_derivaciones.html", context)
 
+def buscar_pacientes_coord(request):
+    """Endpoint para autocompletado de pacientes en búsqueda del coordinador"""
+    if 'usuario_id' not in request.session:
+        return JsonResponse({'error': 'No autenticado'}, status=401)
+    
+    if request.session.get('usuario_rol') != 'Coordinador':
+        return JsonResponse({'error': 'No autorizado'}, status=403)
+    
+    query = request.GET.get('q', '').strip()
+    
+    if len(query) < 2:
+        return JsonResponse({'pacientes': []})
+    
+    # Buscar pacientes que tengan derivaciones
+    pacientes = Paciente.objects.filter(
+        Q(rut__icontains=query) | Q(nombre__icontains=query)
+    ).filter(
+        derivacion__isnull=False
+    ).distinct()[:10]
+    
+    resultados = [
+        {
+            'rut': p.rut,
+            'nombre': p.nombre,
+            'display': f"{p.rut} - {p.nombre}"
+        }
+        for p in pacientes
+    ]
+    
+    return JsonResponse({'pacientes': resultados})
+
 def gestionar_derivacion(request, derivacion_id, nuevo_estado):
     # Verificar autenticación
     if 'usuario_id' not in request.session:

@@ -10,209 +10,270 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
-      background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem 0;
     }
-    
-    .card {
-      border-radius: 20px;
-      border: none;
+
+    .form-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      animation: fadeInUp 0.6s ease-out;
     }
-    
-    .card-header {
-      background: #6c5ce7;
-      color: white;
-      border-radius: 20px 20px 0 0;
-      padding: 2rem;
+
+    .form-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #f1f3f5;
     }
-    
-    .form-control, .form-select {
-      border-radius: 10px;
-      border: 2px solid #e9ecef;
-      padding: 12px 16px;
-      transition: all 0.3s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-      border-color: #6c5ce7;
-      box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
-      transform: translateY(-2px);
-    }
-    
-    .btn-primary {
-      background: #6c5ce7;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-      background: #5f4fd1;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
-    }
-    
-    fieldset {
-      background: white;
-      border: 2px solid #f1f3f5;
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    legend {
-      background: #6c5ce7;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 1rem;
-      width: auto;
-      margin-bottom: 0;
-    }
-    
-    label {
-      font-weight: 500;
-      color: #495057;
+
+    .form-header h1 {
+      color: #1e293b;
+      font-size: 1.75rem;
+      font-weight: 700;
       margin-bottom: 0.5rem;
     }
-    
+
+    .form-header p {
+      color: #64748b;
+      margin: 0;
+    }
+
+    .section-title {
+      color: #667eea;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 0.875rem 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
     .form-text {
-      color: #6c757d;
-      font-size: 0.875rem;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-weight: 600;
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-submit:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-back {
+      background: rgba(100, 116, 139, 0.1);
+      color: #64748b;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: #64748b;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .section-box {
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
-<body class="bg-light">
-  <div class="container my-5">
-    <div class="card shadow-lg border-0">
-      <div class="card-header border-0 py-4">
-        <div class="d-flex align-items-center">
-          <i class="fa fa-user-plus fa-2x me-3"></i>
-          <div>
-            <h1 class="mb-0">Registrar Ficha de Paciente</h1>
-            <small>Complete todos los datos del paciente</small>
+<body>
+  <div class="container" style="max-width: 900px;">
+    <div class="form-card">
+      <div class="form-header">
+        <h1><i class="fa fa-user-plus me-2" style="color: #667eea;"></i>Registrar Ficha de Paciente</h1>
+        <p>Complete todos los datos del paciente para crear su ficha clínica</p>
+      </div>
+
+      <form method="POST" action="{% url 'ficha_paciente' %}">
+        {% csrf_token %}
+        
+        <!-- Datos del Paciente -->
+        <div class="section-box">
+          <div class="section-title">
+            <i class="fa fa-user"></i>
+            <span>Datos del Paciente</span>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="rut" class="form-label">RUT</label>
+              <input type="text" id="rut" name="rut" class="form-control" 
+                     placeholder="12345678-9" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="nombre" class="form-label">Nombre Completo</label>
+              <input type="text" id="nombre" name="nombre" class="form-control" 
+                     placeholder="Juan Pérez González" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="edad" class="form-label">Edad</label>
+              <input type="number" id="edad" name="edad" class="form-control" 
+                     placeholder="45" min="0" max="120" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="genero" class="form-label">Género</label>
+              <select id="genero" name="genero" class="form-select">
+                <option value="">Seleccionar...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="prevision" class="form-label">Previsión</label>
+              <select id="prevision" name="prevision" class="form-select">
+                <option value="">Seleccionar...</option>
+                <option value="Fonasa">Fonasa</option>
+                <option value="Isapre">Isapre</option>
+                <option value="Particular">Particular</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="card-body p-4">
-        <form method="POST" action="{% url 'ficha_paciente' %}">
-          {% csrf_token %}
-          
-          <fieldset class="mb-4">
-            <legend><i class="fa fa-user"></i> Datos del Paciente</legend>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="rut" class="form-label fw-bold">
-                  <i class="fa fa-id-card text-primary"></i> RUT
-                </label>
-                <input type="text" id="rut" name="rut" class="form-control" 
-                       placeholder="Ej: 12345678-9" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="nombre" class="form-label fw-bold">
-                  <i class="fa fa-signature text-primary"></i> Nombre Completo
-                </label>
-                <input type="text" id="nombre" name="nombre" class="form-control" 
-                       placeholder="Ej: Juan Pérez González" required>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <label for="edad" class="form-label fw-bold">
-                  <i class="fa fa-calendar text-primary"></i> Edad
-                </label>
-                <input type="number" id="edad" name="edad" class="form-control" 
-                       placeholder="Ej: 45" min="0" max="120" required>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="genero" class="form-label fw-bold">
-                  <i class="fa fa-venus-mars text-primary"></i> Género
-                </label>
-                <select id="genero" name="genero" class="form-select">
-                  <option value="">Seleccionar...</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="prevision" class="form-label fw-bold">
-                  <i class="fa fa-hospital text-primary"></i> Previsión
-                </label>
-                <select id="prevision" name="prevision" class="form-select">
-                  <option value="">Seleccionar...</option>
-                  <option value="Fonasa">Fonasa</option>
-                  <option value="Isapre">Isapre</option>
-                  <option value="Particular">Particular</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </div>
-            </div>
-          </fieldset>
 
-          <fieldset class="mb-4">
-            <legend><i class="fa fa-notes-medical"></i> Condiciones Clínicas</legend>
-            <div class="mb-3">
-              <label for="comorbilidades" class="form-label fw-bold">
-                <i class="fa fa-heartbeat text-danger"></i> Comorbilidades
-              </label>
-              <textarea id="comorbilidades" name="comorbilidades" class="form-control" rows="3"
-                        placeholder="Ej: Diabetes tipo 2, Hipertensión arterial"></textarea>
-              <small class="text-muted">Ingrese las enfermedades o condiciones previas del paciente</small>
-            </div>
-            <div class="mb-3">
-              <label for="funcionalidad" class="form-label fw-bold">
-                <i class="fa fa-walking text-success"></i> Funcionalidad
-              </label>
-              <select id="funcionalidad" name="funcionalidad" class="form-select">
-                <option value="">Seleccionar...</option>
-                <option value="Autovalente">Autovalente</option>
-                <option value="Dependencia Leve">Dependencia Leve</option>
-                <option value="Dependencia Moderada">Dependencia Moderada</option>
-                <option value="Dependencia Severa">Dependencia Severa</option>
-              </select>
-              <small class="text-muted">Nivel de independencia del paciente</small>
-            </div>
-          </fieldset>
+        <!-- Condiciones Clínicas -->
+        <div class="section-box">
+          <div class="section-title">
+            <i class="fa fa-notes-medical"></i>
+            <span>Condiciones Clínicas</span>
+          </div>
 
-          <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-lg py-3">
-              <i class="fa fa-save"></i> Guardar Ficha del Paciente
+          <div class="mb-3">
+            <label for="comorbilidades" class="form-label">Comorbilidades</label>
+            <textarea id="comorbilidades" name="comorbilidades" class="form-control" rows="3"
+                      placeholder="Ej: Diabetes tipo 2, Hipertensión arterial"></textarea>
+            <small class="form-text">Ingrese las enfermedades o condiciones previas del paciente</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="funcionalidad" class="form-label">Funcionalidad</label>
+            <select id="funcionalidad" name="funcionalidad" class="form-select">
+              <option value="">Seleccionar...</option>
+              <option value="Autovalente">Autovalente</option>
+              <option value="Dependencia Leve">Dependencia Leve</option>
+              <option value="Dependencia Moderada">Dependencia Moderada</option>
+              <option value="Dependencia Severa">Dependencia Severa</option>
+            </select>
+            <small class="form-text">Nivel de independencia del paciente</small>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="row g-3">
+          <div class="col-md-8">
+            <button type="submit" class="btn btn-submit w-100">
+              <i class="fa fa-save me-2"></i>Guardar Ficha del Paciente
             </button>
-            <a href="{% url 'tens' %}" class="btn btn-outline-secondary">
-              <i class="fa fa-arrow-left"></i> Volver al Menú TENS
+          </div>
+          <div class="col-md-4">
+            <a href="{% url 'tens' %}" class="btn btn-back w-100">
+              <i class="fa fa-arrow-left me-2"></i>Volver
             </a>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Validación de RUT en tiempo real
+    // Validación de RUT
     document.getElementById('rut').addEventListener('input', function(e) {
       let value = e.target.value.replace(/[^0-9kK]/g, '');
       if (value.length > 1) {
         value = value.slice(0, -1) + '-' + value.slice(-1);
       }
       e.target.value = value;
-    });
-
-    // Animación de entrada
-    document.addEventListener('DOMContentLoaded', function() {
-      const fieldsets = document.querySelectorAll('fieldset');
-      fieldsets.forEach((fieldset, index) => {
-        fieldset.style.opacity = '0';
-        fieldset.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          fieldset.style.transition = 'all 0.5s ease';
-          fieldset.style.opacity = '1';
-          fieldset.style.transform = 'translateY(0)';
-        }, index * 200);
-      });
     });
   </script>
 </body>

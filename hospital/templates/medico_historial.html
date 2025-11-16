@@ -8,90 +8,304 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem 0;
+    }
+
+    .historial-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem 1rem 3.5rem;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+    }
+
+    .patient-info-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .patient-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #667eea, #764ba2);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2rem;
+      animation: fadeInLeft 0.6s ease-out backwards;
+    }
+
+    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+    .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.5rem;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #667eea;
+    }
+
+    .timeline-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-card:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .timeline-id {
+      font-size: 0.875rem;
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .timeline-date {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .timeline-content h6 {
+      color: #1e293b;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-content p {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid #f1f3f5;
+    }
+
+    .badge-custom {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #94a3b8;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <div class="card shadow-sm main-card">
-      <div class="card-header bg-white border-0 py-4">
-        <h1><i class="fa fa-history"></i> Historial de Derivaciones</h1>
-        <p class="mb-0">Todas las derivaciones del paciente</p>
-      </div>
-      <div class="card-body p-4">
-        <!-- Formulario de Búsqueda con Autocompletado -->
-        <form method="GET" action="{% url 'medico_historial' %}" class="mb-4">
-          <div class="position-relative">
-            <div class="input-group">
-              <input type="text" class="form-control" id="rut-input-hist" name="rut" 
-                     placeholder="Ingrese nombre o RUT del paciente..." 
-                     value="{% if paciente %}{{ paciente.rut }}{% endif %}" 
-                     autocomplete="off"
-                     required>
-              <button class="btn btn-primary" type="submit">
-                <i class="fa fa-search"></i> Buscar
-              </button>
-            </div>
-            <div id="sugerencias-hist" class="list-group position-absolute w-100" style="z-index: 1000; display: none; max-height: 300px; overflow-y: auto;"></div>
-          </div>
-        </form>
+  <div class="container" style="max-width: 1000px;">
+    <div class="historial-card">
+      <h1 class="mb-4" style="color: #1e293b;">
+        <i class="fa fa-history me-2" style="color: #667eea;"></i>
+        Historial de Derivaciones
+      </h1>
 
-        {% if paciente %}
-          <!-- Información del Paciente -->
-          <div class="alert alert-info">
-            <strong><i class="fa fa-user"></i> Paciente:</strong> {{ paciente.nombre }} (RUT: {{ paciente.rut }})
-          </div>
+      <!-- Buscador -->
+      <form method="GET" action="{% url 'medico_historial' %}">
+        <div class="search-box">
+          <i class="fa fa-search search-icon"></i>
+          <input type="text" 
+                 class="search-input" 
+                 id="rut-input-hist"
+                 name="rut" 
+                 placeholder="Ingrese nombre o RUT del paciente..." 
+                 value="{% if paciente %}{{ paciente.rut }}{% endif %}"
+                 autocomplete="off"
+                 required>
+          <div id="sugerencias-hist" class="suggestions-box" style="display: none; position: absolute; width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-top: 0.5rem; max-height: 300px; overflow-y: auto; z-index: 1000;"></div>
+        </div>
+      </form>
 
-          {% if derivaciones %}
-            <h5 class="mb-3">Historial Completo ({{ derivaciones|length }} derivaciones)</h5>
-            <div class="table-responsive">
-              <table class="table table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Motivo</th>
-                    <th>Hospital</th>
-                    <th>Médico</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for derivacion in derivaciones %}
-                  <tr>
-                    <td><strong>#{{ derivacion.id_derivacion }}</strong></td>
-                    <td>{{ derivacion.fecha|date:"d/m/Y H:i" }}</td>
-                    <td>{{ derivacion.motivo|truncatewords:8 }}</td>
-                    <td>{{ derivacion.id_hospital.nombre }}</td>
-                    <td>{{ derivacion.id_usuario.nombre }}</td>
-                    <td>
-                      {% if derivacion.estado == 'Aceptada' %}
-                        <span class="badge bg-success">{{ derivacion.estado }}</span>
-                      {% elif derivacion.estado == 'Pendiente' %}
-                        <span class="badge bg-warning text-dark">{{ derivacion.estado }}</span>
-                      {% elif derivacion.estado == 'Rechazada' %}
-                        <span class="badge bg-danger">{{ derivacion.estado }}</span>
-                      {% else %}
-                        <span class="badge bg-info">{{ derivacion.estado }}</span>
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+      {% if paciente %}
+        <!-- Info del Paciente -->
+        <div class="patient-info-banner">
+          <div class="patient-icon">
+            <i class="fa fa-user"></i>
+          </div>
+          <div>
+            <h5 class="mb-1">{{ paciente.nombre }}</h5>
+            <p class="mb-0 opacity-75">RUT: {{ paciente.rut }}</p>
+          </div>
+        </div>
+
+        {% if derivaciones %}
+          <h5 class="mb-4" style="color: #667eea;">
+            <i class="fa fa-list me-2"></i>
+            {{ derivaciones|length }} derivación{% if derivaciones|length != 1 %}es{% endif %} registrada{% if derivaciones|length != 1 %}s{% endif %}
+          </h5>
+
+          <!-- Timeline -->
+          <div class="timeline">
+            {% for derivacion in derivaciones %}
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <div class="timeline-header">
+                  <span class="timeline-id">#{{ derivacion.id_derivacion }}</span>
+                  <span class="timeline-date">
+                    <i class="fa fa-calendar me-1"></i>
+                    {{ derivacion.fecha|date:"d/m/Y H:i" }}
+                  </span>
+                </div>
+                <div class="timeline-content">
+                  <h6>{{ derivacion.motivo|truncatewords:10 }}</h6>
+                  <p class="mb-2">
+                    <i class="fa fa-hospital me-2" style="color: #667eea;"></i>
+                    {{ derivacion.id_hospital.nombre }}
+                  </p>
+                  {% if derivacion.prestacion %}
+                  <p class="mb-0">
+                    <i class="fa fa-stethoscope me-2" style="color: #667eea;"></i>
+                    {{ derivacion.prestacion }}
+                  </p>
+                  {% endif %}
+                </div>
+                <div class="timeline-footer">
+                  <div>
+                    <small style="color: #64748b;">Médico: {{ derivacion.id_usuario.nombre }}</small>
+                  </div>
+                  <div>
+                    {% if derivacion.estado == 'Aceptada' %}
+                      <span class="badge-custom" style="background: #d1fae5; color: #065f46;">
+                        <i class="fa fa-check-circle me-1"></i>{{ derivacion.estado }}
+                      </span>
+                    {% elif derivacion.estado == 'Pendiente' %}
+                      <span class="badge-custom" style="background: #fef3c7; color: #92400e;">
+                        <i class="fa fa-clock me-1"></i>{{ derivacion.estado }}
+                      </span>
+                    {% elif derivacion.estado == 'Rechazada' %}
+                      <span class="badge-custom" style="background: #fee2e2; color: #991b1b;">
+                        <i class="fa fa-times-circle me-1"></i>{{ derivacion.estado }}
+                      </span>
+                    {% else %}
+                      <span class="badge-custom" style="background: #dbeafe; color: #1e40af;">
+                        <i class="fa fa-eye me-1"></i>{{ derivacion.estado }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
             </div>
-          {% else %}
-            <div class="alert alert-warning">
-              <i class="fa fa-exclamation-triangle"></i> 
-              Este paciente no tiene derivaciones registradas.
-            </div>
-          {% endif %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class="fa fa-inbox"></i>
+            <h5>Sin historial</h5>
+            <p>Este paciente no tiene derivaciones registradas</p>
+          </div>
         {% endif %}
+      {% endif %}
 
-        <a href="{% url 'medico' %}" class="d-block text-center mt-4">
-          <i class="fa fa-arrow-left"></i> Volver al Menú Médico
+      <div class="text-center mt-4">
+        <a href="{% url 'medico' %}" style="background: rgba(100, 116, 139, 0.1); color: #64748b; border: none; border-radius: 12px; padding: 0.875rem 1.5rem; font-weight: 600; transition: all 0.3s ease; display: inline-block; text-decoration: none;">
+          <i class="fa fa-arrow-left me-2"></i>Volver al Panel Médico
         </a>
       </div>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const inputRut = document.getElementById('rut-input-hist');
@@ -123,21 +337,16 @@
                 const nombre = row.children[1].textContent.trim();
                 const edad = row.children[2].textContent.trim();
                 
-                const item = document.createElement('a');
-                item.href = '#';
-                item.className = 'list-group-item list-group-item-action';
+                const item = document.createElement('div');
+                item.style.cssText = 'padding: 1rem; border-bottom: 1px solid #f1f3f5; cursor: pointer; transition: all 0.3s ease;';
                 item.innerHTML = `
-                  <div class="d-flex justify-content-between">
-                    <div>
-                      <strong>${nombre}</strong><br>
-                      <small class="text-muted">RUT: ${rut} | ${edad}</small>
-                    </div>
-                    <i class="fa fa-arrow-right text-muted"></i>
-                  </div>
+                  <div style="font-weight: 600; color: #1e293b;">${nombre}</div>
+                  <div style="font-size: 0.875rem; color: #64748b;">RUT: ${rut} | ${edad}</div>
                 `;
                 
-                item.addEventListener('click', (e) => {
-                  e.preventDefault();
+                item.addEventListener('mouseenter', () => item.style.background = '#f8f9fa');
+                item.addEventListener('mouseleave', () => item.style.background = 'white');
+                item.addEventListener('click', () => {
                   inputRut.value = rut;
                   sugerenciasDiv.style.display = 'none';
                   inputRut.form.submit();
@@ -146,9 +355,6 @@
                 sugerenciasDiv.appendChild(item);
               });
               
-              sugerenciasDiv.style.display = 'block';
-            } else {
-              sugerenciasDiv.innerHTML = '<div class="list-group-item text-muted">No se encontraron resultados</div>';
               sugerenciasDiv.style.display = 'block';
             }
           });

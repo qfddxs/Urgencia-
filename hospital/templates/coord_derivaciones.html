@@ -8,168 +8,507 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem 0;
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      padding: 2.5rem;
+      margin: 2rem auto;
+      max-width: 1600px;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      animation: slideUp 0.5s ease-out;
+      color: #ffffff;
+    }
+
+    .header-title {
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.8s ease-in;
+    }
+
+    .derivacion-card {
+      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border-left: 5px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      animation: slideUp 0.5s ease-out;
+      animation-fill-mode: both;
+      color: #ffffff;
+      backdrop-filter: blur(15px);
+    }
+
+    .derivacion-card:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    }
+
+    .derivacion-card.pendiente { border-left-color: #f093fb; }
+    .derivacion-card.aceptada { border-left-color: #43e97b; }
+    .derivacion-card.rechazada { border-left-color: #fa709a; }
+    .derivacion-card.revision { border-left-color: #4facfe; }
+
+    .derivacion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .derivacion-header > div:first-child {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .derivacion-header > div:last-child {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+
+    .derivacion-id {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .derivacion-body {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    @media (max-width: 1400px) {
+      .derivacion-body {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .derivacion-body {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .derivacion-body {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .derivacion-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 0.95rem;
+      color: #ffffff;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .btn-action-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-accept {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: white;
+    }
+
+    .btn-review {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+
+    .btn-reject {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: white;
+    }
+
+    .btn-liberar {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+    }
+
+    .badge-custom {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .badge-pendiente {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .badge-aceptada {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: white;
+    }
+
+    .badge-rechazada {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: white;
+    }
+
+    .badge-revision {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+
+    .badge-camas {
+      padding: 0.4rem 0.8rem;
+      border-radius: 15px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: white;
+    }
+
+    .empty-state i {
+      font-size: 5rem;
+      opacity: 0.5;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert {
+      border-radius: 15px;
+      border: none;
+      animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .derivacion-card:nth-child(1) { animation-delay: 0.1s; }
+    .derivacion-card:nth-child(2) { animation-delay: 0.15s; }
+    .derivacion-card:nth-child(3) { animation-delay: 0.2s; }
+    .derivacion-card:nth-child(4) { animation-delay: 0.25s; }
+    .derivacion-card:nth-child(5) { animation-delay: 0.3s; }
+
+    .btn-action.btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .btn-action.btn-primary:hover {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    .btn-action.btn-secondary {
+      background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    }
+
+    .btn-action.btn-secondary:hover {
+      background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <div class="card shadow-sm main-card">
-      <div class="card-header bg-white border-0 py-4">
-        <h1>Derivaciones Pendientes</h1>
-        <p class="mb-0">Listado de solicitudes que requieren gestión</p>
+  <div class="container-fluid px-4">
+    <div class="glass-container">
+      <!-- Header -->
+      <div class="mb-5 pb-3" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h1 class="header-title mb-3" style="font-size: 2.5rem;">
+              <i class="fas fa-exchange-alt me-3"></i>Derivaciones Pendientes
+            </h1>
+            <p class="text-white mb-0" style="font-size: 1.1rem;">
+              <i class="fas fa-list-check me-2"></i>Listado de solicitudes que requieren gestión
+            </p>
+          </div>
+          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="font-size: 1rem; white-space: nowrap;">
+            <i class="fas fa-arrow-left me-2"></i>Volver al Menú
+          </a>
+        </div>
       </div>
-      <div class="card-body p-4">
-        <!-- Mensaje de Error -->
-        {% if mensaje_error %}
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-triangle"></i> {{ mensaje_error }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        {% endif %}
-        
-        <!-- Filtros -->
-        <div class="card mb-4 bg-light">
-          <div class="card-body">
-            <form method="GET" action="{% url 'coord_derivaciones' %}">
-              <div class="row g-3">
-                <div class="col-md-3">
-                  <label for="busqueda" class="form-label">Buscar Paciente</label>
-                  <input type="text" class="form-control" id="busqueda" name="busqueda" 
-                         placeholder="Nombre o RUT" value="{{ busqueda }}">
-                </div>
-                <div class="col-md-3">
-                  <label for="estado" class="form-label">Estado</label>
-                  <select class="form-select" id="estado" name="estado">
-                    <option value="">Todos</option>
-                    <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
-                    <option value="En revisión" {% if estado_filtro == 'En revisión' %}selected{% endif %}>En revisión</option>
-                    <option value="Aceptada" {% if estado_filtro == 'Aceptada' %}selected{% endif %}>Aceptada</option>
-                    <option value="Rechazada" {% if estado_filtro == 'Rechazada' %}selected{% endif %}>Rechazada</option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <label for="hospital" class="form-label">Hospital</label>
-                  <select class="form-select" id="hospital" name="hospital">
-                    <option value="">Todos</option>
-                    {% for hospital in hospitales %}
-                    <option value="{{ hospital.id_hospital }}" {% if hospital_filtro == hospital.id_hospital|stringformat:"s" %}selected{% endif %}>
-                      {{ hospital.nombre }}
-                    </option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div class="col-md-3 d-flex align-items-end">
-                  <button type="submit" class="btn btn-primary me-2">
-                    <i class="fa fa-search"></i> Filtrar
-                  </button>
-                  <a href="{% url 'coord_derivaciones' %}" class="btn btn-secondary">
-                    <i class="fa fa-times"></i> Limpiar
-                  </a>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
 
-        <!-- Tabla de Derivaciones -->
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Paciente</th>
-                <th>RUT</th>
-                <th>Motivo</th>
-                <th>Hospital</th>
-                <th>Médico</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th class="text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for derivacion in derivaciones %}
-              <tr>
-                <td><strong>#{{ derivacion.id_derivacion }}</strong></td>
-                <td>{{ derivacion.id_paciente.nombre }}</td>
-                <td>{{ derivacion.id_paciente.rut }}</td>
-                <td>{{ derivacion.motivo|truncatewords:5 }}</td>
-                <td>
-                  {{ derivacion.id_hospital.nombre }}
-                  <br>
-                  <small class="text-muted">
-                    Disponibles: 
-                    <span class="badge bg-{% if derivacion.id_hospital.camas_disponibles > 5 %}success{% elif derivacion.id_hospital.camas_disponibles > 0 %}warning{% else %}danger{% endif %}">
-                      {{ derivacion.id_hospital.camas_disponibles }}/{{ derivacion.id_hospital.camas_totales }}
-                    </span>
-                  </small>
-                </td>
-                <td>{{ derivacion.id_usuario.nombre }}</td>
-                <td>{{ derivacion.fecha|date:"d/m/Y H:i" }}</td>
-                <td>
-                  {% if derivacion.estado == 'Pendiente' %}
-                    <span class="badge bg-warning text-dark">{{ derivacion.estado }}</span>
-                  {% elif derivacion.estado == 'Aceptada' %}
-                    <span class="badge bg-success">{{ derivacion.estado }}</span>
-                  {% elif derivacion.estado == 'Rechazada' %}
-                    <span class="badge bg-danger">{{ derivacion.estado }}</span>
-                  {% else %}
-                    <span class="badge bg-info">{{ derivacion.estado }}</span>
-                  {% endif %}
-                </td>
-                <td class="text-center">
-                  {% if derivacion.estado == 'Pendiente' or derivacion.estado == 'En revisión' %}
-                  <div class="btn-group btn-group-sm" role="group">
-                    {% if derivacion.id_hospital.tiene_camas_disponibles %}
-                      <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Aceptada' %}" 
-                         class="btn btn-success" title="Aceptar (Asignar cama)">
-                        <i class="fa fa-check"></i>
-                      </a>
-                    {% else %}
-                      <button class="btn btn-secondary" disabled title="Sin camas disponibles">
-                        <i class="fa fa-ban"></i>
-                      </button>
-                    {% endif %}
-                    <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'En revisión' %}" 
-                       class="btn btn-info" title="En Revisión">
-                      <i class="fa fa-eye"></i>
-                    </a>
-                    <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Rechazada' %}" 
-                       class="btn btn-danger" title="Rechazar">
-                      <i class="fa fa-times"></i>
-                    </a>
-                  </div>
-                  {% elif derivacion.estado == 'Aceptada' %}
-                  <span class="text-success small">
-                    <i class="fa fa-check-circle"></i> Cama asignada
+      <!-- Mensaje de Error -->
+      {% if mensaje_error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>{{ mensaje_error }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+      
+      <!-- Filtros -->
+      <div class="glass-card" style="padding: 2rem;">
+        <h5 class="mb-4" style="font-size: 1.2rem; font-weight: 600;">
+          <i class="fas fa-filter me-2" style="color: #667eea;"></i>Filtros de Búsqueda
+        </h5>
+        <form method="GET" action="{% url 'coord_derivaciones' %}" id="filtrosForm">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="busqueda" class="form-label fw-bold">
+                <i class="fas fa-search me-1"></i>Buscar Paciente
+              </label>
+              <input type="text" class="form-control" id="busqueda" name="busqueda" 
+                     placeholder="Nombre o RUT" value="{{ busqueda }}"
+                     style="border-radius: 10px;">
+            </div>
+            <div class="col-md-3">
+              <label for="estado" class="form-label fw-bold">
+                <i class="fas fa-info-circle me-1"></i>Estado
+              </label>
+              <select class="form-select" id="estado" name="estado" style="border-radius: 10px;" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="En revisión" {% if estado_filtro == 'En revisión' %}selected{% endif %}>En revisión</option>
+                <option value="Aceptada" {% if estado_filtro == 'Aceptada' %}selected{% endif %}>Aceptada</option>
+                <option value="Rechazada" {% if estado_filtro == 'Rechazada' %}selected{% endif %}>Rechazada</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="hospital" class="form-label fw-bold">
+                <i class="fas fa-hospital me-1"></i>Hospital
+              </label>
+              <select class="form-select" id="hospital" name="hospital" style="border-radius: 10px;" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                {% for hospital in hospitales %}
+                <option value="{{ hospital.id_hospital }}" {% if hospital_filtro == hospital.id_hospital|stringformat:"s" %}selected{% endif %}>
+                  {{ hospital.nombre }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+              <button type="submit" class="btn btn-action btn-primary flex-grow-1">
+                <i class="fas fa-search"></i>
+              </button>
+              <a href="{% url 'coord_derivaciones' %}" class="btn btn-action btn-secondary flex-grow-1">
+                <i class="fas fa-times"></i>
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de Derivaciones (Cards) -->
+      <div class="derivaciones-list" style="margin-top: 2rem;">
+        {% for derivacion in derivaciones %}
+        <div class="derivacion-card {% if derivacion.estado == 'Pendiente' %}pendiente{% elif derivacion.estado == 'Aceptada' %}aceptada{% elif derivacion.estado == 'Rechazada' %}rechazada{% else %}revision{% endif %}">
+          <div class="derivacion-header">
+            <div>
+              <span class="derivacion-id">#{{ derivacion.id_derivacion }}</span>
+              <span>
+                {% if derivacion.estado == 'Pendiente' %}
+                  <span class="badge-custom badge-pendiente">
+                    <i class="fas fa-clock"></i>{{ derivacion.estado }}
                   </span>
-                  <br>
-                  <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Rechazada' %}" 
-                     class="btn btn-sm btn-outline-danger mt-1" 
-                     title="Rechazar y liberar cama"
-                     onclick="return confirm('¿Está seguro? Esto liberará la cama asignada.')">
-                    <i class="fa fa-undo"></i> Liberar
-                  </a>
-                  {% else %}
-                  <span class="text-muted small">{{ derivacion.estado }}</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="9" class="text-center text-muted py-4">
-                  <i class="fa fa-inbox fa-3x mb-3 d-block"></i>
-                  No se encontraron derivaciones con los filtros aplicados.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+                {% elif derivacion.estado == 'Aceptada' %}
+                  <span class="badge-custom badge-aceptada">
+                    <i class="fas fa-check-circle"></i>{{ derivacion.estado }}
+                  </span>
+                {% elif derivacion.estado == 'Rechazada' %}
+                  <span class="badge-custom badge-rechazada">
+                    <i class="fas fa-times-circle"></i>{{ derivacion.estado }}
+                  </span>
+                {% else %}
+                  <span class="badge-custom badge-revision">
+                    <i class="fas fa-eye"></i>{{ derivacion.estado }}
+                  </span>
+                {% endif %}
+              </span>
+            </div>
+            <div class="text-muted">
+              <i class="fas fa-calendar-alt me-1"></i>{{ derivacion.fecha|date:"d/m/Y H:i" }}
+            </div>
+          </div>
+
+          <div class="derivacion-body">
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-user me-1"></i>Paciente</span>
+              <span class="info-value">{{ derivacion.id_paciente.nombre }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-id-card me-1"></i>RUT</span>
+              <span class="info-value">{{ derivacion.id_paciente.rut }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-user-md me-1"></i>Médico</span>
+              <span class="info-value">{{ derivacion.id_usuario.nombre }}</span>
+            </div>
+            <div class="info-item" style="grid-column: span 2;">
+              <span class="info-label"><i class="fas fa-hospital me-1"></i>Hospital Destino</span>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="info-value">{{ derivacion.id_hospital.nombre }}</span>
+                <span class="badge-camas bg-{% if derivacion.id_hospital.camas_disponibles > 5 %}success{% elif derivacion.id_hospital.camas_disponibles > 0 %}warning{% else %}danger{% endif %}">
+                  <i class="fas fa-bed me-1"></i>{{ derivacion.id_hospital.camas_disponibles }}/{{ derivacion.id_hospital.camas_totales }}
+                </span>
+              </div>
+            </div>
+            <div class="info-item" style="grid-column: span 5;">
+              <span class="info-label"><i class="fas fa-notes-medical me-1"></i>Motivo de Derivación</span>
+              <span class="info-value">{{ derivacion.motivo }}</span>
+            </div>
+          </div>
+
+          <div class="btn-action-group">
+            {% if derivacion.estado == 'Pendiente' or derivacion.estado == 'En revisión' %}
+              {% if derivacion.id_hospital.tiene_camas_disponibles %}
+                <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Aceptada' %}" 
+                   class="btn-action btn-accept">
+                  <i class="fas fa-check"></i>Aceptar
+                </a>
+              {% else %}
+                <button class="btn-action" style="background: #ccc; cursor: not-allowed;" disabled>
+                  <i class="fas fa-ban"></i>Sin camas
+                </button>
+              {% endif %}
+              <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'En revisión' %}" 
+                 class="btn-action btn-review">
+                <i class="fas fa-eye"></i>En Revisión
+              </a>
+              <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Rechazada' %}" 
+                 class="btn-action btn-reject">
+                <i class="fas fa-times"></i>Rechazar
+              </a>
+            {% elif derivacion.estado == 'Aceptada' %}
+              <span class="text-success fw-bold">
+                <i class="fas fa-check-circle me-1"></i>Cama asignada
+              </span>
+              <a href="{% url 'gestionar_derivacion' derivacion.id_derivacion 'Rechazada' %}" 
+                 class="btn-action btn-liberar" 
+                 onclick="return confirm('¿Está seguro? Esto liberará la cama asignada.')">
+                <i class="fas fa-undo"></i>Liberar Cama
+              </a>
+            {% else %}
+              <span class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>{{ derivacion.estado }}
+              </span>
+            {% endif %}
+          </div>
         </div>
-        
-        <div class="mt-3">
-          <p class="text-muted small">Total de derivaciones: <strong>{{ derivaciones|length }}</strong></p>
+        {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>No se encontraron derivaciones</h3>
+          <p>No hay derivaciones que coincidan con los filtros aplicados.</p>
         </div>
-        
-        <a href="{% url 'coordinador' %}" class="d-block text-center mt-4">Volver al Menú Coordinador</a>
+        {% endfor %}
+      </div>
+      
+      <div class="glass-card mt-4" style="padding: 1.5rem 2rem;">
+        <p class="mb-0 text-center" style="font-size: 1.1rem;">
+          <i class="fas fa-list me-2" style="color: #667eea;"></i>
+          Total de derivaciones: <strong style="color: #667eea; font-size: 1.2rem;">{{ derivaciones|length }}</strong>
+        </p>
       </div>
     </div>
   </div>
