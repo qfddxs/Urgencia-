@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,32 +9,80 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Paleta Púrpura Moderno */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem 0;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
     }
 
     .derivaciones-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 3rem;
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      border: 3px solid rgba(167, 139, 250, 0.3);
       animation: fadeInUp 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .derivaciones-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .derivaciones-card h1 {
+      color: #5b21b6;
+      font-weight: 800;
+      text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .stats-banner {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       color: white;
-      border-radius: 16px;
-      padding: 1.5rem;
+      border-radius: 20px;
+      padding: 2rem;
       margin-bottom: 2rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
+      gap: 1.5rem;
+      box-shadow: 
+        0 10px 30px rgba(124, 58, 237, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .stat-item {
@@ -42,33 +90,55 @@
     }
 
     .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .stat-label {
-      font-size: 0.875rem;
-      opacity: 0.9;
+      font-size: 0.9rem;
+      opacity: 0.95;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .derivacion-item {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      border: 2px solid #ddd6fe;
       transition: all 0.3s ease;
-      animation: fadeInLeft 0.6s ease-out backwards;
+      animation: fadeInUp 0.4s ease-out backwards;
+      position: relative;
+      overflow: hidden;
     }
 
-    .derivacion-item:nth-child(1) { animation-delay: 0.1s; }
-    .derivacion-item:nth-child(2) { animation-delay: 0.2s; }
-    .derivacion-item:nth-child(3) { animation-delay: 0.3s; }
+    .derivacion-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .derivacion-item:nth-child(1) { animation-delay: 0.05s; }
+    .derivacion-item:nth-child(2) { animation-delay: 0.1s; }
+    .derivacion-item:nth-child(3) { animation-delay: 0.15s; }
+    .derivacion-item:nth-child(4) { animation-delay: 0.2s; }
+    .derivacion-item:nth-child(5) { animation-delay: 0.25s; }
 
     .derivacion-item:hover {
       transform: translateX(8px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      box-shadow: 
+        0 10px 30px rgba(124, 58, 237, 0.2),
+        -4px 0 0 #a78bfa;
+      border-color: #a78bfa;
     }
 
     .derivacion-header {
@@ -79,9 +149,10 @@
     }
 
     .derivacion-id {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #667eea;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #7c3aed;
+      letter-spacing: 0.5px;
     }
 
     .derivacion-body {
@@ -89,10 +160,14 @@
     }
 
     .patient-name {
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 700;
       color: #1e293b;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .patient-name i {
+      color: #a78bfa;
     }
 
     .derivacion-info {
@@ -103,14 +178,23 @@
     }
 
     .info-badge {
-      background: #f8f9fa;
-      padding: 0.75rem;
-      border-radius: 8px;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
       font-size: 0.875rem;
+      border: 2px solid #ede9fe;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .info-badge:hover {
+      border-color: #c4b5fd;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
     }
 
     .info-badge i {
-      color: #667eea;
+      color: #7c3aed;
       margin-right: 0.5rem;
     }
 
@@ -119,74 +203,144 @@
       justify-content: space-between;
       align-items: center;
       padding-top: 1rem;
-      border-top: 1px solid #f1f3f5;
+      border-top: 2px solid #ede9fe;
+    }
+
+    .derivacion-footer small {
+      color: #6d28d9;
+      font-weight: 600;
     }
 
     .badge-status {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 700;
       font-size: 0.875rem;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .action-buttons {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
     .btn-action {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
       border: none;
-      font-weight: 500;
+      font-weight: 700;
       transition: all 0.3s ease;
       font-size: 0.875rem;
       text-decoration: none;
       display: inline-block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .btn-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: #94a3b8;
+      color: #c4b5fd;
     }
 
     .empty-state i {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+    }
+
+    .empty-state h5 {
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    .empty-state p {
+      color: #a78bfa;
     }
 
     .readonly-badge {
-      background: rgba(100, 116, 139, 0.1);
-      color: #64748b;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      color: #475569;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 700;
       font-size: 0.875rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-info-custom {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border: 2px solid #a78bfa;
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      color: #5b21b6;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.15);
+      font-weight: 600;
+    }
+
+    .alert-info-custom i {
+      color: #7c3aed;
+    }
+
+    .btn-back {
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeInLeft {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+      }
+    }
+
+    .modal-content {
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .modal-footer .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
     }
   </style>
 </head>
 <body>
   <div class="container" style="max-width: 1200px;">
     <div class="derivaciones-card">
-      <h1 class="mb-4" style="color: #1e293b;">
-        <i class="fa fa-list-alt me-2" style="color: #667eea;"></i>
+      <h1 class="mb-4" style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+        <i class="fa fa-list-alt me-2"></i>
         {% if request.session.usuario_rol == 'Médico' %}Mis Derivaciones{% else %}Derivaciones Registradas{% endif %}
       </h1>
 
@@ -197,15 +351,11 @@
           <div class="stat-label">Total</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">
-            {% for d in derivaciones %}{% if d.estado == 'Pendiente' %}1{% endif %}{% endfor %}
-          </div>
+          <div class="stat-value">{{ pendientes }}</div>
           <div class="stat-label">Pendientes</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">
-            {% for d in derivaciones %}{% if d.estado == 'Aceptada' %}1{% endif %}{% endfor %}
-          </div>
+          <div class="stat-value">{{ aceptadas }}</div>
           <div class="stat-label">Aceptadas</div>
         </div>
         {% if request.session.usuario_rol == 'TENS' %}
@@ -217,7 +367,7 @@
       </div>
 
       {% if request.session.usuario_rol == 'TENS' %}
-      <div style="background: rgba(14, 165, 233, 0.1); border: 2px solid #0ea5e9; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; color: #0369a1;">
+      <div class="alert-info-custom">
         <i class="fa fa-info-circle me-2"></i>
         <strong>Modo Solo Lectura:</strong> Como TENS, puedes consultar las derivaciones pero no modificarlas.
       </div>
@@ -252,7 +402,7 @@
 
           <div class="derivacion-body">
             <div class="patient-name">
-              <i class="fa fa-user me-2" style="color: #667eea;"></i>
+              <i class="fa fa-user me-2" style="color: #0f766e;"></i>
               {{ derivacion.id_paciente.nombre }}
             </div>
             <p style="color: #64748b; margin-bottom: 1rem;">{{ derivacion.motivo|truncatewords:15 }}</p>
@@ -285,12 +435,16 @@
                    style="background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); color: white;">
                   <i class="fa fa-edit"></i> Editar
                 </a>
-                <a href="{% url 'borrar_derivacion' derivacion.id_derivacion %}" 
+                <button type="button"
                    class="btn-action" 
-                   style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); color: white;"
-                   onclick="return confirm('¿Está seguro de eliminar esta derivación?')">
+                   style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); color: white; border: none; cursor: pointer;"
+                   data-bs-toggle="modal" 
+                   data-bs-target="#deleteModal"
+                   data-derivacion-id="{{ derivacion.id_derivacion }}"
+                   data-derivacion-numero="#{{ derivacion.id_derivacion }}"
+                   data-paciente-nombre="{{ derivacion.id_paciente.nombre }}">
                   <i class="fa fa-trash"></i> Borrar
-                </a>
+                </button>
               {% else %}
                 <span class="readonly-badge">
                   <i class="fa fa-lock"></i> Solo lectura
@@ -310,11 +464,11 @@
 
       <div class="text-center mt-4">
         {% if request.session.usuario_rol == 'Médico' %}
-          <a href="{% url 'medico' %}" style="background: rgba(100, 116, 139, 0.1); color: #64748b; border: none; border-radius: 12px; padding: 0.875rem 1.5rem; font-weight: 600; transition: all 0.3s ease; display: inline-block; text-decoration: none;">
+          <a href="{% url 'medico' %}" class="btn-back">
             <i class="fa fa-arrow-left me-2"></i>Volver al Panel Médico
           </a>
         {% else %}
-          <a href="{% url 'tens' %}" style="background: rgba(100, 116, 139, 0.1); color: #64748b; border: none; border-radius: 12px; padding: 0.875rem 1.5rem; font-weight: 600; transition: all 0.3s ease; display: inline-block; text-decoration: none;">
+          <a href="{% url 'tens' %}" class="btn-back">
             <i class="fa fa-arrow-left me-2"></i>Volver al Panel TENS
           </a>
         {% endif %}
@@ -322,6 +476,72 @@
     </div>
   </div>
 
+  <!-- Modal de Confirmación de Borrado -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 24px; border: 3px solid rgba(239, 68, 68, 0.3); overflow: hidden;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 2rem; position: relative;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);"></div>
+          <div style="width: 100%; text-align: center;">
+            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2s ease-in-out infinite;">
+              <i class="fa fa-exclamation-triangle" style="font-size: 2.5rem;"></i>
+            </div>
+            <h5 class="modal-title" id="deleteModalLabel" style="font-size: 1.75rem; font-weight: 800; margin: 0;">¿Estás seguro?</h5>
+            <p style="margin: 0.5rem 0 0 0; opacity: 0.95; font-weight: 600;">Esta acción es irreversible</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; top: 1rem; right: 1rem;"></button>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+          <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left: 5px solid #ef4444; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <p style="margin-bottom: 0.75rem; font-weight: 600; color: #1e293b;">
+              <i class="fa fa-file-medical me-2" style="color: #ef4444;"></i>
+              <strong style="color: #dc2626;">Derivación <span id="modal-derivacion-numero"></span></strong>
+            </p>
+            <p style="margin: 0; font-weight: 600; color: #1e293b;">
+              <i class="fa fa-user me-2" style="color: #ef4444;"></i>
+              Paciente: <strong style="color: #dc2626;" id="modal-paciente-nombre"></strong>
+            </p>
+          </div>
+          <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 1rem; border-radius: 12px; border: 2px solid #fecaca; text-align: center;">
+            <p style="color: #dc2626; font-weight: 700; margin: 0; font-size: 1.05rem;">
+              <i class="fa fa-exclamation-circle me-2" style="font-size: 1.2rem;"></i>
+              Esta acción no se puede deshacer
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none; padding: 0 2rem 2rem 2rem; display: flex; gap: 1rem;">
+          <form id="deleteForm" method="POST" style="flex: 1;">
+            {% csrf_token %}
+            <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: none; border-radius: 12px; color: white; padding: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4); transition: all 0.3s ease;">
+              <i class="fa fa-trash-alt me-2"></i>Sí, borrar
+            </button>
+          </form>
+          <button type="button" class="btn w-100" data-bs-dismiss="modal" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%); border: none; border-radius: 12px; color: white; padding: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3); transition: all 0.3s ease;">
+            <i class="fa fa-times me-2"></i>Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Configurar el modal con los datos de la derivación
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const derivacionId = button.getAttribute('data-derivacion-id');
+      const derivacionNumero = button.getAttribute('data-derivacion-numero');
+      const pacienteNombre = button.getAttribute('data-paciente-nombre');
+      
+      // Actualizar el contenido del modal
+      document.getElementById('modal-derivacion-numero').textContent = derivacionNumero;
+      document.getElementById('modal-paciente-nombre').textContent = pacienteNombre;
+      
+      // Actualizar la acción del formulario
+      const form = document.getElementById('deleteForm');
+      form.action = `/medico/derivacion/borrar/${derivacionId}/`;
+    });
+  </script>
 </body>
 </html>

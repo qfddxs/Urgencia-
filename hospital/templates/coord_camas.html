@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,45 +9,81 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <style>
+    /* Paleta Púrpura Moderno */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem 0;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container-fluid {
+      position: relative;
+      z-index: 1;
     }
 
     .glass-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      border: 3px solid rgba(167, 139, 250, 0.3);
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
       padding: 3rem;
       margin: 3rem auto;
       max-width: 1400px;
-      animation: fadeIn 0.6s ease-in;
+      animation: fadeIn 0.5s ease-in;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .header-title {
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.8s ease-in;
+      color: #5b21b6;
+      text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
+      animation: fadeIn 0.5s ease-in;
+      font-weight: 800;
     }
 
     .hospital-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 24px;
       padding: 2.5rem;
       margin-bottom: 2rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      transition: all 0.4s ease;
-      animation: slideUp 0.5s ease-out;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      transition: all 0.3s ease;
+      animation: slideUp 0.4s ease-out;
       animation-fill-mode: both;
       position: relative;
       overflow: hidden;
-      color: #ffffff;
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #1e293b;
+      backdrop-filter: blur(20px);
+      border: 2px solid #ddd6fe;
     }
 
     .hospital-card::before {
@@ -55,26 +91,27 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 100%);
     }
 
     .hospital-card.disponible::before {
-      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
     }
 
     .hospital-card.media::before {
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
     }
 
     .hospital-card.critica::before {
-      background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+      background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
     }
 
     .hospital-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+      border-color: #a78bfa;
     }
 
     .hospital-header {
@@ -85,9 +122,9 @@
     }
 
     .hospital-name {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #667eea;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #5b21b6;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -125,37 +162,41 @@
 
     .stat-box {
       text-align: center;
-      padding: 1.5rem;
-      border-radius: 15px;
-      background: rgba(102, 126, 234, 0.05);
+      padding: 1.75rem;
+      border-radius: 16px;
+      background: white;
+      border: 2px solid #ede9fe;
       transition: all 0.3s ease;
-      min-height: 120px;
+      min-height: 130px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
     }
 
     .stat-box:hover {
-      background: rgba(102, 126, 234, 0.1);
-      transform: scale(1.05);
+      border-color: #c4b5fd;
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.15);
     }
 
     .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.8rem;
+      font-weight: 800;
       margin-bottom: 0.5rem;
     }
 
     .stat-label {
       font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
+      color: #6d28d9;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
-    .stat-disponible { color: #43e97b; }
-    .stat-ocupada { color: #fa709a; }
-    .stat-total { color: #667eea; }
+    .stat-disponible { color: #10b981; }
+    .stat-ocupada { color: #ef4444; }
+    .stat-total { color: #7c3aed; }
 
     .progress-container {
       margin-bottom: 1rem;
@@ -164,17 +205,19 @@
     .progress-label {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+      color: #5b21b6;
+      font-size: 1rem;
     }
 
     .progress-glass {
-      background: rgba(102, 126, 234, 0.1);
+      background: #ede9fe;
       border-radius: 15px;
-      height: 30px;
+      height: 32px;
       overflow: hidden;
       position: relative;
+      border: 2px solid #ddd6fe;
     }
 
     .progress-bar-custom {
@@ -182,44 +225,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      font-weight: 800;
       color: white;
       transition: width 1.5s ease;
       position: relative;
       overflow: hidden;
-    }
-
-    .progress-bar-custom::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      animation: shimmer 2s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+      font-size: 0.95rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .progress-disponible {
-      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
     }
 
     .progress-media {
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
     }
 
     .progress-critica {
-      background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+      background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
     }
 
     .badge-status {
@@ -248,53 +272,73 @@
     }
 
     .btn-glass {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      border: none;
       color: white;
-      padding: 0.8rem 2rem;
-      border-radius: 25px;
+      padding: 1rem 2rem;
+      border-radius: 14px;
       transition: all 0.3s ease;
-      font-weight: 600;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
+      text-decoration: none;
     }
 
     .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
       color: white;
     }
 
     .legend-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      backdrop-filter: blur(15px);
-      border-radius: 15px;
-      padding: 2rem;
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2.5rem;
       margin-top: 3rem;
-      animation: slideUp 0.7s ease-out;
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideUp 0.4s ease-out;
+      color: #1e293b;
+      border: 2px solid #ddd6fe;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .legend-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .legend-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #667eea;
-      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #5b21b6;
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      margin-bottom: 1rem;
-      padding: 0.5rem 0;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0;
+      font-weight: 500;
+      color: #1e293b;
     }
 
     @keyframes fadeIn {
@@ -305,7 +349,7 @@
     @keyframes slideUp {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -313,21 +357,31 @@
       }
     }
 
-    .hospital-card:nth-child(1) { animation-delay: 0.1s; }
-    .hospital-card:nth-child(2) { animation-delay: 0.2s; }
-    .hospital-card:nth-child(3) { animation-delay: 0.3s; }
-    .hospital-card:nth-child(4) { animation-delay: 0.4s; }
+    .hospital-card:nth-child(1) { animation-delay: 0.05s; }
+    .hospital-card:nth-child(2) { animation-delay: 0.1s; }
+    .hospital-card:nth-child(3) { animation-delay: 0.15s; }
+    .hospital-card:nth-child(4) { animation-delay: 0.2s; }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: white;
+      color: #c4b5fd;
     }
 
     .empty-state i {
       font-size: 5rem;
-      opacity: 0.5;
-      margin-bottom: 1rem;
+      opacity: 0.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-state h3 {
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    .empty-state p {
+      color: #a78bfa;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -335,18 +389,19 @@
   <div class="container-fluid px-4">
     <div class="glass-container">
       <!-- Header -->
-      <div class="mb-5 pb-3" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+      <div class="mb-5 pb-3" style="border-bottom: 3px solid #ede9fe; position: relative;">
+        <div style="position: absolute; bottom: -3px; left: 0; width: 150px; height: 3px; background: linear-gradient(90deg, #7c3aed, #a78bfa, #c4b5fd); box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);"></div>
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div>
             <h1 class="header-title mb-3" style="font-size: 2.5rem;">
               <i class="fas fa-bed me-3"></i>Estado de Camas
             </h1>
-            <p class="text-white mb-0" style="font-size: 1.1rem;">
+            <p class="mb-0" style="font-size: 1.1rem; color: #6d28d9; font-weight: 600;">
               <i class="fas fa-hospital me-2"></i>Disponibilidad actual en hospitales de la red
             </p>
           </div>
-          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="font-size: 1rem; white-space: nowrap;">
-            <i class="fas fa-arrow-left me-2"></i>Volver al Menú
+          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="white-space: nowrap;">
+            <i class="fas fa-arrow-left"></i>Volver
           </a>
         </div>
       </div>

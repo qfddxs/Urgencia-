@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,188 +9,382 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem 0;
+      position: relative;
     }
 
-    .glass-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-      padding: 3rem;
-      margin: 3rem auto;
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
       max-width: 1400px;
-      animation: fadeIn 0.6s ease-in;
     }
 
-    .glass-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      backdrop-filter: blur(15px);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    .header-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      border: 3px solid rgba(167, 139, 250, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .welcome-text {
+      color: #5b21b6;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
+    }
+
+    .welcome-text i {
+      color: #7c3aed;
+    }
+
+    .subtitle {
+      color: #6d28d9;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      border: none;
+      padding: 0.875rem 1.75rem;
+      border-radius: 14px;
+      font-weight: 700;
       transition: all 0.3s ease;
-      animation: slideUp 0.5s ease-out;
-      animation-fill-mode: both;
-      min-height: 400px;
-      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
     }
 
-    .glass-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    .btn-logout:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .stat-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.3) 0%, rgba(167, 139, 250, 0.3) 100%);
-      border-radius: 15px;
-      padding: 2rem 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 2rem;
+      border: 2px solid #ddd6fe;
       transition: all 0.3s ease;
-      animation: slideUp 0.5s ease-out;
-      animation-fill-mode: both;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: #ffffff;
-      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
     }
 
     .stat-card:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+      border-color: #a78bfa;
     }
-
-    .stat-card:nth-child(1) { animation-delay: 0.1s; }
-    .stat-card:nth-child(2) { animation-delay: 0.2s; }
-    .stat-card:nth-child(3) { animation-delay: 0.3s; }
-    .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
     .stat-icon {
       width: 60px;
       height: 60px;
-      border-radius: 50%;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
       margin-bottom: 1rem;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    .action-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      border-radius: 15px;
-      padding: 3rem 2rem;
-      text-align: center;
       transition: all 0.3s ease;
-      border: 2px solid rgba(255, 255, 255, 0.25);
-      animation: slideUp 0.6s ease-out;
-      animation-fill-mode: both;
-      height: 100%;
-      min-height: 320px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      color: #ffffff;
-      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 20px rgba(124, 58, 237, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
-    .action-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+    .stat-card:hover .stat-icon {
+      transform: scale(1.08);
     }
 
-    .action-card:nth-child(1) { animation-delay: 0.2s; }
-    .action-card:nth-child(2) { animation-delay: 0.3s; }
-
-    .action-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .action-card:hover .action-icon {
-      transform: rotate(360deg) scale(1.1);
-    }
-
-    .btn-glass {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 0.6rem 1.5rem;
-      border-radius: 25px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    .stat-icon i {
+      font-size: 1.6rem;
       color: white;
     }
 
-    .btn-action {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      color: white;
-      padding: 0.8rem 2rem;
-      border-radius: 25px;
+    .stat-label {
+      color: #6d28d9;
+      font-size: 0.9rem;
       font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      color: #5b21b6;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .content-card {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 2rem;
+      border: 2px solid #ddd6fe;
+      margin-bottom: 2rem;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+      opacity: 0.8;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #5b21b6;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .card-title i {
+      color: #7c3aed;
+    }
+
+    .estado-item {
+      background: rgba(124, 58, 237, 0.05);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      border-left: 3px solid #a78bfa;
     }
 
-    .btn-action:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-      color: white;
+    .estado-item:hover {
+      background: rgba(124, 58, 237, 0.1);
+      transform: translateX(5px);
     }
 
-    .header-title {
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.8s ease-in;
+    .badge-custom {
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
     }
 
-    .progress-glass {
-      background: rgba(255, 255, 255, 0.3);
+    .hospital-item {
+      background: rgba(124, 58, 237, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      border-left: 3px solid #a78bfa;
+    }
+
+    .hospital-item:hover {
+      background: rgba(124, 58, 237, 0.1);
+      transform: translateX(5px);
+    }
+
+    .hospital-name {
+      color: #5b21b6;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-custom {
+      background: rgba(124, 58, 237, 0.15);
       border-radius: 10px;
       height: 25px;
       overflow: hidden;
     }
 
-    .progress-bar-animated {
-      animation: progressSlide 1s ease-out;
+    .progress-bar-custom {
+      transition: width 1s ease;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
-    @keyframes slideUp {
+    .action-card {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 2.5rem;
+      border: 2px solid #ddd6fe;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      text-align: center;
+    }
+
+    .action-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .action-card:hover::before {
+      opacity: 1;
+    }
+
+    .action-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+      border-color: #a78bfa;
+    }
+
+    .action-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 8px 20px rgba(124, 58, 237, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .action-card:hover .action-icon {
+      transform: scale(1.08);
+    }
+
+    .action-icon i {
+      font-size: 2rem;
+      color: white;
+    }
+
+    .action-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #5b21b6;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.3px;
+    }
+
+    .action-description {
+      color: #6d28d9;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 14px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3);
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+      color: white;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+      color: white;
+    }
+
+    @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -198,203 +392,177 @@
       }
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
+    .header-card {
+      animation: fadeInUp 0.5s ease-out;
     }
 
-    @keyframes progressSlide {
-      from {
-        width: 0;
-      }
+    .stat-card {
+      animation: fadeInUp 0.5s ease-out backwards;
     }
 
-    .hospital-card {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.2rem;
-      transition: all 0.3s ease;
-      animation: slideUp 0.5s ease-out;
-      animation-fill-mode: both;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+    .content-card {
+      animation: fadeInUp 0.5s ease-out 0.25s backwards;
     }
 
-    .hospital-card:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .action-card {
+      animation: fadeInUp 0.5s ease-out backwards;
     }
 
-    .hospital-card:nth-child(1) { animation-delay: 0.1s; }
-    .hospital-card:nth-child(2) { animation-delay: 0.2s; }
-    .hospital-card:nth-child(3) { animation-delay: 0.3s; }
-    .hospital-card:nth-child(4) { animation-delay: 0.4s; }
+    .action-card:nth-child(1) { animation-delay: 0.3s; }
+    .action-card:nth-child(2) { animation-delay: 0.35s; }
   </style>
 </head>
 <body>
-  <div class="container-fluid px-4">
-    <div class="glass-container">
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-5 pb-3" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+  <div class="container">
+    <!-- Header -->
+    <div class="header-card">
+      <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h1 class="header-title mb-3" style="font-size: 2.5rem;">
-            <i class="fas fa-user-tie me-3"></i>Panel del Coordinador
+          <h1 class="welcome-text">
+            <i class="fas fa-user-tie me-2"></i>
+            Panel del Coordinador
           </h1>
-          <p class="text-white mb-0" style="font-size: 1.1rem;">
-            <i class="fas fa-user-circle me-2"></i>Bienvenido, {{ request.session.usuario_nombre }}
-          </p>
+          <p class="subtitle mb-0">Bienvenido, {{ request.session.usuario_nombre }}</p>
         </div>
-        <a href="{% url 'logout' %}" class="btn btn-glass" style="font-size: 1rem;">
+        <a href="{% url 'logout' %}" class="btn btn-logout">
           <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
         </a>
       </div>
+    </div>
 
-      <div class="mt-5">
-        <!-- Dashboard de Estadísticas -->
-        <h4 class="text-white mb-4" style="font-size: 1.5rem; font-weight: 600;">
-          <i class="fas fa-chart-line me-2"></i>Resumen General
-        </h4>
-        <div class="row mb-5 g-4">
-          <div class="col-md-3 mb-3">
-            <div class="stat-card text-center">
-              <div class="stat-icon mx-auto" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <i class="fas fa-clock text-white"></i>
-              </div>
-              <h6 class="text-muted mb-2">Derivaciones Pendientes</h6>
-              <h2 class="mb-0" style="color: #f5576c; font-weight: 700;">{{ derivaciones_pendientes }}</h2>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="stat-card text-center">
-              <div class="stat-icon mx-auto" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <i class="fas fa-calendar-day text-white"></i>
-              </div>
-              <h6 class="text-muted mb-2">Derivaciones Hoy</h6>
-              <h2 class="mb-0" style="color: #00f2fe; font-weight: 700;">{{ derivaciones_hoy }}</h2>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="stat-card text-center">
-              <div class="stat-icon mx-auto" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                <i class="fas fa-bed text-white"></i>
-              </div>
-              <h6 class="text-muted mb-2">Camas Disponibles</h6>
-              <h2 class="mb-0" style="color: #38f9d7; font-weight: 700;">{{ total_disponibles }}</h2>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="stat-card text-center">
-              <div class="stat-icon mx-auto" style="background: linear-gradient(135deg, {% if porcentaje_ocupacion >= 90 %}#fa709a 0%, #fee140 100%{% elif porcentaje_ocupacion >= 70 %}#ffecd2 0%, #fcb69f 100%{% else %}#a8edea 0%, #fed6e3 100%{% endif %});">
-                <i class="fas fa-chart-pie text-white"></i>
-              </div>
-              <h6 class="text-muted mb-2">Ocupación</h6>
-              <h2 class="mb-0" style="color: {% if porcentaje_ocupacion >= 90 %}#fa709a{% elif porcentaje_ocupacion >= 70 %}#fcb69f{% else %}#a8edea{% endif %}; font-weight: 700;">{{ porcentaje_ocupacion }}%</h2>
-            </div>
-          </div>
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);">
+          <i class="fas fa-clock"></i>
         </div>
+        <div class="stat-label">Derivaciones Pendientes</div>
+        <div class="stat-value">{{ derivaciones_pendientes }}</div>
+      </div>
 
-        <!-- Derivaciones por Estado y Hospitales -->
-        <div class="row mb-5 g-4">
-          <div class="col-md-6 mb-3">
-            <div class="glass-card p-4">
-              <h5 class="mb-4" style="font-size: 1.2rem; font-weight: 600;">
-                <i class="fas fa-list-check me-2" style="color: #667eea;"></i>Derivaciones por Estado
-              </h5>
-              {% for item in derivaciones_por_estado %}
-              <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background: rgba(102, 126, 234, 0.05); transition: all 0.3s ease;">
-                <span>
-                  {% if item.estado == 'Pendiente' %}
-                    <span class="badge" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 0.5rem 1rem;">
-                      <i class="fas fa-clock me-1"></i>{{ item.estado }}
-                    </span>
-                  {% elif item.estado == 'Aceptada' %}
-                    <span class="badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 0.5rem 1rem;">
-                      <i class="fas fa-check-circle me-1"></i>{{ item.estado }}
-                    </span>
-                  {% elif item.estado == 'Rechazada' %}
-                    <span class="badge" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 0.5rem 1rem;">
-                      <i class="fas fa-times-circle me-1"></i>{{ item.estado }}
-                    </span>
-                  {% else %}
-                    <span class="badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 0.5rem 1rem;">
-                      <i class="fas fa-info-circle me-1"></i>{{ item.estado }}
-                    </span>
-                  {% endif %}
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+          <i class="fas fa-calendar-day"></i>
+        </div>
+        <div class="stat-label">Derivaciones Hoy</div>
+        <div class="stat-value">{{ derivaciones_hoy }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+          <i class="fas fa-bed"></i>
+        </div>
+        <div class="stat-label">Camas Disponibles</div>
+        <div class="stat-value">{{ total_disponibles }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <div class="stat-label">Ocupación</div>
+        <div class="stat-value">{{ porcentaje_ocupacion }}%</div>
+      </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="content-card">
+          <h5 class="card-title">
+            <i class="fas fa-list-check me-2"></i>Derivaciones por Estado
+          </h5>
+          {% for item in derivaciones_por_estado %}
+          <div class="estado-item">
+            <span>
+              {% if item.estado == 'Pendiente' %}
+                <span class="badge-custom" style="background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); color: white;">
+                  <i class="fas fa-clock me-1"></i>{{ item.estado }}
                 </span>
-                <strong style="font-size: 1.3rem; color: #667eea;">{{ item.total }}</strong>
-              </div>
-              {% endfor %}
-            </div>
+              {% elif item.estado == 'Aceptada' %}
+                <span class="badge-custom" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                  <i class="fas fa-check-circle me-1"></i>{{ item.estado }}
+                </span>
+              {% elif item.estado == 'Rechazada' %}
+                <span class="badge-custom" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;">
+                  <i class="fas fa-times-circle me-1"></i>{{ item.estado }}
+                </span>
+              {% else %}
+                <span class="badge-custom" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white;">
+                  <i class="fas fa-info-circle me-1"></i>{{ item.estado }}
+                </span>
+              {% endif %}
+            </span>
+            <strong style="font-size: 1.3rem; color: #7c3aed;">{{ item.total }}</strong>
           </div>
-          <div class="col-md-6 mb-3">
-            <div class="glass-card p-4">
-              <h5 class="mb-4" style="font-size: 1.2rem; font-weight: 600;">
-                <i class="fas fa-hospital me-2" style="color: #667eea;"></i>Estado de Hospitales
-              </h5>
-              {% for hospital in hospitales %}
-              <div class="hospital-card">
-                <div class="d-flex justify-content-between mb-2">
-                  <strong style="color: #667eea;">
-                    <i class="fas fa-building me-2"></i>{{ hospital.nombre }}
-                  </strong>
-                  <span class="badge bg-secondary">{{ hospital.camas_ocupadas }}/{{ hospital.camas_totales }}</span>
-                </div>
-                <div class="progress progress-glass">
-                  {% widthratio hospital.camas_ocupadas hospital.camas_totales 100 as ocupacion %}
-                  <div class="progress-bar progress-bar-animated {% if ocupacion >= 90 %}bg-danger{% elif ocupacion >= 70 %}bg-warning{% else %}bg-success{% endif %}" 
-                       role="progressbar" 
-                       style="width: {{ ocupacion }}%; transition: width 1s ease;">
-                    <strong>{{ ocupacion }}%</strong>
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
+          {% endfor %}
         </div>
+      </div>
 
-        <!-- Menú de Acciones -->
-        <h4 class="text-white mb-4 mt-5" style="font-size: 1.5rem; font-weight: 600;">
-          <i class="fas fa-bolt me-2"></i>Acciones Rápidas
-        </h4>
-        <div class="row g-4">
-          <div class="col-md-6 mb-4">
-            <div class="action-card">
-              <div class="action-icon mx-auto" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <i class="fas fa-exchange-alt text-white"></i>
+      <div class="col-md-6">
+        <div class="content-card">
+          <h5 class="card-title">
+            <i class="fas fa-hospital me-2"></i>Estado de Hospitales
+          </h5>
+          {% for hospital in hospitales %}
+          <div class="hospital-item">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="hospital-name">
+                <i class="fas fa-building me-2"></i>{{ hospital.nombre }}
+              </span>
+              <span class="badge-custom" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white;">
+                {{ hospital.camas_ocupadas }}/{{ hospital.camas_totales }}
+              </span>
+            </div>
+            <div class="progress-custom">
+              {% widthratio hospital.camas_ocupadas hospital.camas_totales 100 as ocupacion %}
+              <div class="progress-bar-custom bg-success" 
+                   role="progressbar" 
+                   style="width: {{ ocupacion }}%;">
+                <strong>{{ ocupacion }}%</strong>
               </div>
-              <div>
-                <h5 class="mb-3" style="color: #667eea; font-weight: 600; font-size: 1.3rem;">Gestionar Derivaciones</h5>
-                <p class="text-muted mb-4" style="font-size: 1rem; line-height: 1.6;">Revisa y gestiona solicitudes de derivación entre hospitales.</p>
-              </div>
-              <a href="/coordinador/derivaciones" class="btn btn-action">
-                <i class="fas fa-arrow-right me-2"></i>Ver Derivaciones
-              </a>
             </div>
           </div>
-          <div class="col-md-6 mb-4">
-            <div class="action-card">
-              <div class="action-icon mx-auto" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                <i class="fas fa-bed text-white"></i>
-              </div>
-              <div>
-                <h5 class="mb-3" style="color: #38f9d7; font-weight: 600; font-size: 1.3rem;">Gestión de Camas</h5>
-                <p class="text-muted mb-4" style="font-size: 1rem; line-height: 1.6;">Administra la disponibilidad de camas en los hospitales.</p>
-              </div>
-              <a href="/coordinador/camas" class="btn btn-action">
-                <i class="fas fa-arrow-right me-2"></i>Ver Camas
-              </a>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="action-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);">
+          <i class="fas fa-exchange-alt"></i>
+        </div>
+        <h3 class="action-title">Gestionar Derivaciones</h3>
+        <p class="action-description">
+          Revisa y gestiona solicitudes de derivación entre hospitales
+        </p>
+        <a href="/coordinador/derivaciones" class="btn btn-action">
+          <i class="fas fa-arrow-right me-2"></i>Ver Derivaciones
+        </a>
+      </div>
+
+      <div class="action-card">
+        <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+          <i class="fas fa-bed"></i>
+        </div>
+        <h3 class="action-title">Gestión de Camas</h3>
+        <p class="action-description">
+          Administra la disponibilidad de camas en los hospitales
+        </p>
+        <a href="/coordinador/camas" class="btn btn-action">
+          <i class="fas fa-arrow-right me-2"></i>Ver Camas
+        </a>
+      </div>
+    </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

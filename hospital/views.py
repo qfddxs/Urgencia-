@@ -79,6 +79,8 @@ def tens(request):
     return render(request, "tens.html")
 
 def ficha_paciente(request):
+    mensaje_exito = None
+    
     if request.method == 'POST':
         rut = request.POST.get('rut')
         nombre = request.POST.get('nombre')
@@ -105,8 +107,9 @@ def ficha_paciente(request):
                 funcionalidad=funcionalidad
             )
             
-            return redirect('ver_fichas') # Redirige a la lista de pacientes
-    return render(request, "ficha_paciente.html")
+            mensaje_exito = f"Ficha del paciente {nombre} registrada exitosamente"
+            
+    return render(request, "ficha_paciente.html", {'mensaje_exito': mensaje_exito})
 
 def registrar_derivacion(request):
     # Verificar autenticación
@@ -170,8 +173,16 @@ def registrar_derivacion(request):
             prestacion=prestacion,
             estado='Pendiente'
         )
-        # Redirigimos al usuario a la lista de derivaciones
-        return redirect('ver_derivaciones')
+        
+        # Mensaje de éxito y recargar datos
+        pacientes = Paciente.objects.all().order_by('nombre')
+        hospitales = Hospital.objects.all()
+        
+        return render(request, "registrar_derivacion.html", {
+            "pacientes": pacientes,
+            "hospitales": hospitales,
+            "mensaje_exito": f"Derivación registrada exitosamente para {paciente.nombre} hacia {hospital.nombre}"
+        })
 
     # Obtenemos todos los pacientes y hospitales para mostrarlos en el formulario
     pacientes = Paciente.objects.all().order_by('nombre')
@@ -193,8 +204,17 @@ def registrar_derivacion(request):
 def ver_derivaciones(request):
     # Obtenemos todas las derivaciones de la base de datos, ordenadas por fecha
     derivaciones = Derivacion.objects.all().order_by('-fecha')
+    
+    # Calculamos los contadores
+    pendientes = derivaciones.filter(estado='Pendiente').count()
+    aceptadas = derivaciones.filter(estado='Aceptada').count()
+    
     # Las pasamos a la plantilla
-    return render(request, "ver_derivaciones.html", {"derivaciones": derivaciones})
+    return render(request, "ver_derivaciones.html", {
+        "derivaciones": derivaciones,
+        "pendientes": pendientes,
+        "aceptadas": aceptadas
+    })
 
 def ver_fichas(request):
     # Obtenemos todos los pacientes de la base de datos
@@ -649,3 +669,90 @@ def coord_camas(request):
 
 def coord_reportes(request):
     return render(request, "coord_reportes.html")
+
+
+# RECUPERACIÓN DE CONTRASEÑA
+
+def forgot_password(request):
+    """Vista para solicitar recuperación de contraseña"""
+    if request.method == "POST":
+        usuario_input = request.POST.get("usuario")
+        
+        if not usuario_input:
+            return render(request, "forgot_password.html", {
+                "error": "Por favor ingrese su nombre de usuario"
+            })
+        
+        try:
+            # Verificar que el usuario existe
+            user = Usuario.objects.get(usuario=usuario_input)
+            
+            # Guardar el usuario en sesión temporal para el cambio de contraseña
+            request.session['reset_usuario_id'] = user.id_usuario
+            request.session['reset_usuario'] = user.usuario
+            
+            return redirect('reset_password')
+            
+        except Usuario.DoesNotExist:
+            return render(request, "forgot_password.html", {
+                "error": "Usuario no encontrado en el sistema"
+            })
+    
+    return render(request, "forgot_password.html")
+
+def reset_password(request):
+    """Vista para cambiar la contraseña"""
+    # Verificar que hay una sesión de reset activa
+    if 'reset_usuario_id' not in request.session:
+        return redirect('forgot_password')
+    
+    if request.method == "POST":
+        nueva_clave = request.POST.get("nueva_clave")
+        confirmar_clave = request.POST.get("confirmar_clave")
+        
+        # Validaciones
+        if not nueva_clave or not confirmar_clave:
+            return render(request, "reset_password.html", {
+                "error": "Por favor complete todos los campos",
+                "usuario": request.session.get('reset_usuario')
+            })
+        
+        if nueva_clave != confirmar_clave:
+            return render(request, "reset_password.html", {
+                "error": "Las contraseñas no coinciden",
+                "usuario": request.session.get('reset_usuario')
+            })
+        
+        if len(nueva_clave) < 4:
+            return render(request, "reset_password.html", {
+                "error": "La contraseña debe tener al menos 4 caracteres",
+                "usuario": request.session.get('reset_usuario')
+            })
+        
+        try:
+            # Obtener el usuario y actualizar la contraseña
+            user = Usuario.objects.get(id_usuario=request.session['reset_usuario_id'])
+            
+            # Encriptar la nueva contraseña
+            from django.contrib.auth.hashers import make_password
+            user.clave = make_password(nueva_clave)
+            user.save()
+            
+            # Limpiar la sesión de reset
+            del request.session['reset_usuario_id']
+            del request.session['reset_usuario']
+            
+            # Redirigir al login con mensaje de éxito
+            return render(request, "index.html", {
+                "success": "Contraseña cambiada exitosamente. Por favor inicia sesión."
+            })
+            
+        except Usuario.DoesNotExist:
+            return render(request, "reset_password.html", {
+                "error": "Error al cambiar la contraseña",
+                "usuario": request.session.get('reset_usuario')
+            })
+    
+    return render(request, "reset_password.html", {
+        "usuario": request.session.get('reset_usuario')
+    })

@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,71 +9,176 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Paleta Púrpura Moderno */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem 0;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
     }
 
     .actual-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      animation: fadeInUp 0.6s ease-out;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 3rem;
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      border: 3px solid rgba(167, 139, 250, 0.3);
+      animation: fadeInUp 0.5s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .actual-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .actual-card h1 {
+      color: #5b21b6;
+      font-weight: 800;
+      text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
+    }
+
+    .actual-card h1 i {
+      color: #7c3aed;
     }
 
     .search-box {
       position: relative;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .search-input {
       width: 100%;
-      padding: 1rem 1.5rem 1rem 3.5rem;
-      border: 2px solid #e9ecef;
-      border-radius: 12px;
+      padding: 1.2rem 1.75rem 1.2rem 4rem;
+      border: 2px solid #ddd6fe;
+      border-radius: 16px;
+      font-size: 1.05rem;
       transition: all 0.3s ease;
+      background: white;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+    }
+
+    .search-input::placeholder {
+      color: #c4b5fd;
     }
 
     .search-input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      border-color: #7c3aed;
+      box-shadow: 
+        0 0 0 4px rgba(124, 58, 237, 0.15),
+        0 6px 20px rgba(124, 58, 237, 0.2);
+      transform: translateY(-2px);
     }
 
     .search-icon {
       position: absolute;
-      left: 1.25rem;
+      left: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
-      color: #667eea;
+      color: #7c3aed;
+      font-size: 1.2rem;
+    }
+
+    .suggestions-box {
+      position: absolute;
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.2);
+      margin-top: 0.5rem;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      border: 2px solid #ddd6fe;
     }
 
     .patient-banner {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       color: white;
-      border-radius: 16px;
-      padding: 1.5rem;
+      border-radius: 20px;
+      padding: 2rem;
       margin-bottom: 2rem;
+      box-shadow: 
+        0 10px 30px rgba(124, 58, 237, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .patient-banner h5 {
+      font-weight: 800;
+      font-size: 1.4rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .patient-banner p {
+      opacity: 0.95;
+      font-weight: 600;
     }
 
     .derivacion-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
       margin-bottom: 2rem;
-      border: 2px solid #f1f3f5;
+      border: 2px solid #ddd6fe;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .derivacion-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .derivacion-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+      border-color: #a78bfa;
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+    }
+
+    .derivacion-card h4 {
+      color: #5b21b6;
+      font-weight: 800;
+    }
+
+    .derivacion-card h4 i {
+      color: #7c3aed;
     }
 
     .status-badge {
@@ -82,8 +187,9 @@
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
       border-radius: 12px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .info-grid {
@@ -94,65 +200,166 @@
     }
 
     .info-item {
-      background: #f8f9fa;
-      padding: 1.25rem;
-      border-radius: 12px;
-      border-left: 4px solid #667eea;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 14px;
+      border-left: 5px solid #7c3aed;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.15);
     }
 
     .info-label {
-      font-size: 0.875rem;
-      color: #64748b;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #6d28d9;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .info-value {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: #1e293b;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      gap: 1.25rem;
       margin-top: 2rem;
     }
 
     .btn-action {
-      padding: 1rem;
-      border-radius: 12px;
+      padding: 1.2rem;
+      border-radius: 14px;
       border: none;
-      font-weight: 600;
+      font-weight: 700;
       transition: all 0.3s ease;
       text-decoration: none;
       display: block;
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     }
 
     .btn-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: #94a3b8;
+      color: #c4b5fd;
     }
 
     .empty-state i {
-      font-size: 4rem;
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+    }
+
+    .empty-state h5 {
+      color: #7c3aed;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    .empty-state p {
+      color: #a78bfa;
+      font-weight: 500;
+    }
+
+    .section-box {
+      background: white;
+      padding: 1.75rem;
+      border-radius: 14px;
+      margin: 1.5rem 0;
+      border: 2px solid #ede9fe;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+    }
+
+    .section-box h6 {
+      color: #5b21b6;
+      font-weight: 800;
       margin-bottom: 1rem;
-      opacity: 0.5;
+      font-size: 1.1rem;
+    }
+
+    .section-box h6 i {
+      color: #7c3aed;
+    }
+
+    .section-box p {
+      color: #1e293b;
+      font-weight: 500;
+      line-height: 1.7;
+    }
+
+    .alert-box {
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-back {
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
+    }
+
+    .btn-new-derivacion {
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 1rem;
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .btn-new-derivacion:hover {
+      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -161,7 +368,7 @@
   <div class="container" style="max-width: 1000px;">
     <div class="actual-card">
       <h1 class="mb-4" style="color: #1e293b;">
-        <i class="fa fa-clipboard-check me-2" style="color: #667eea;"></i>
+        <i class="fa fa-clipboard-check me-2" style="color: #0f766e;"></i>
         Derivación Actual
       </h1>
 
@@ -193,7 +400,7 @@
           <div class="derivacion-card">
             <div class="d-flex justify-content-between align-items-start mb-3">
               <h4 style="color: #1e293b;">
-                <i class="fa fa-hospital me-2" style="color: #667eea;"></i>
+                <i class="fa fa-hospital me-2" style="color: #0f766e;"></i>
                 Derivación #{{ derivacion.id_derivacion }}
               </h4>
               {% if derivacion.estado == 'Aceptada' %}
@@ -255,35 +462,35 @@
               </div>
             </div>
 
-            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
-              <h6 style="color: #667eea; margin-bottom: 1rem;">
+            <div class="section-box">
+              <h6>
                 <i class="fa fa-notes-medical me-2"></i>Motivo de la Derivación
               </h6>
-              <p style="color: #1e293b; margin: 0;">{{ derivacion.motivo }}</p>
+              <p style="margin: 0;">{{ derivacion.motivo }}</p>
             </div>
 
             {% if derivacion.prestacion %}
-            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px;">
-              <h6 style="color: #667eea; margin-bottom: 1rem;">
+            <div class="section-box">
+              <h6>
                 <i class="fa fa-stethoscope me-2"></i>Prestación Requerida
               </h6>
-              <p style="color: #1e293b; margin: 0;">{{ derivacion.prestacion }}</p>
+              <p style="margin: 0;">{{ derivacion.prestacion }}</p>
             </div>
             {% endif %}
 
             {% if derivacion.estado == 'Aceptada' %}
-              <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: 1rem; margin-top: 1.5rem;">
+              <div class="alert-box" style="background: #d1fae5; border: 2px solid #10b981;">
                 <i class="fa fa-check-circle" style="color: #065f46;"></i>
                 <strong style="color: #065f46;"> Derivación Aceptada</strong>
-                <p style="color: #065f46; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                <p style="color: #065f46; margin: 0.5rem 0 0 0; font-size: 0.95rem;">
                   El paciente tiene una cama asignada en {{ derivacion.id_hospital.nombre }}
                 </p>
               </div>
             {% elif derivacion.estado == 'Pendiente' %}
-              <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 1rem; margin-top: 1.5rem;">
+              <div class="alert-box" style="background: #fef3c7; border: 2px solid #f59e0b;">
                 <i class="fa fa-clock" style="color: #92400e;"></i>
                 <strong style="color: #92400e;"> Pendiente de Revisión</strong>
-                <p style="color: #92400e; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                <p style="color: #92400e; margin: 0.5rem 0 0 0; font-size: 0.95rem;">
                   La derivación está siendo evaluada por el coordinador
                 </p>
               </div>
@@ -308,8 +515,7 @@
             <i class="fa fa-clipboard"></i>
             <h5>Sin derivación activa</h5>
             <p>Este paciente no tiene derivaciones activas en este momento</p>
-            <a href="{% url 'registrar_derivacion' %}" 
-               style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white; border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; display: inline-block; text-decoration: none; margin-top: 1rem;">
+            <a href="{% url 'registrar_derivacion' %}" class="btn-new-derivacion">
               <i class="fa fa-plus-circle me-2"></i>Registrar Nueva Derivación
             </a>
           </div>
@@ -317,7 +523,7 @@
       {% endif %}
 
       <div class="text-center mt-4">
-        <a href="{% url 'medico' %}" style="background: rgba(100, 116, 139, 0.1); color: #64748b; border: none; border-radius: 12px; padding: 0.875rem 1.5rem; font-weight: 600; transition: all 0.3s ease; display: inline-block; text-decoration: none;">
+        <a href="{% url 'medico' %}" class="btn-back">
           <i class="fa fa-arrow-left me-2"></i>Volver al Panel Médico
         </a>
       </div>
@@ -356,14 +562,22 @@
                 const edad = row.children[2].textContent.trim();
                 
                 const item = document.createElement('div');
-                item.style.cssText = 'padding: 1rem; border-bottom: 1px solid #f1f3f5; cursor: pointer; transition: all 0.3s ease;';
+                item.style.cssText = 'padding: 1.25rem 1.75rem; border-bottom: 1px solid #ede9fe; cursor: pointer; transition: all 0.3s ease;';
                 item.innerHTML = `
-                  <div style="font-weight: 600; color: #1e293b;">${nombre}</div>
-                  <div style="font-size: 0.875rem; color: #64748b;">RUT: ${rut} | ${edad}</div>
+                  <div style="font-weight: 700; color: #5b21b6; font-size: 1.05rem;">${nombre}</div>
+                  <div style="font-size: 0.9rem; color: #7c3aed; font-weight: 500;">RUT: ${rut} | ${edad}</div>
                 `;
                 
-                item.addEventListener('mouseenter', () => item.style.background = '#f8f9fa');
-                item.addEventListener('mouseleave', () => item.style.background = 'white');
+                item.addEventListener('mouseenter', () => {
+                  item.style.background = 'linear-gradient(90deg, #faf5ff 0%, #f3e8ff 100%)';
+                  item.style.transform = 'translateX(8px)';
+                  item.style.boxShadow = '-4px 0 0 #a78bfa';
+                });
+                item.addEventListener('mouseleave', () => {
+                  item.style.background = 'white';
+                  item.style.transform = 'translateX(0)';
+                  item.style.boxShadow = 'none';
+                });
                 item.addEventListener('click', () => {
                   inputRut.value = rut;
                   sugerenciasDiv.style.display = 'none';

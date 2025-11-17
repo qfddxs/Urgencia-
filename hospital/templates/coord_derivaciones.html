@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,66 +9,114 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Paleta Púrpura Moderno */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem 0;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container-fluid {
+      position: relative;
+      z-index: 1;
     }
 
     .glass-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-      padding: 2.5rem;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      border: 3px solid rgba(167, 139, 250, 0.3);
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      padding: 3rem;
       margin: 2rem auto;
       max-width: 1600px;
-      animation: fadeIn 0.6s ease-in;
+      animation: fadeIn 0.5s ease-in;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .glass-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      backdrop-filter: blur(15px);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      animation: slideUp 0.5s ease-out;
-      color: #ffffff;
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 20px;
+      border: 2px solid #ddd6fe;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      animation: slideUp 0.4s ease-out;
+      color: #1e293b;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .header-title {
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.8s ease-in;
+      color: #5b21b6;
+      text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
+      animation: fadeIn 0.5s ease-in;
+      font-weight: 800;
     }
 
     .derivacion-card {
-      background: linear-gradient(135deg, rgba(138, 116, 249, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.2rem;
-      border-left: 5px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #7c3aed;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
       transition: all 0.3s ease;
-      animation: slideUp 0.5s ease-out;
+      animation: slideUp 0.4s ease-out;
       animation-fill-mode: both;
-      color: #ffffff;
-      backdrop-filter: blur(15px);
+      color: #1e293b;
+      border: 2px solid #ddd6fe;
     }
 
     .derivacion-card:hover {
       transform: translateX(8px);
-      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+      border-color: #a78bfa;
     }
 
-    .derivacion-card.pendiente { border-left-color: #f093fb; }
-    .derivacion-card.aceptada { border-left-color: #43e97b; }
-    .derivacion-card.rechazada { border-left-color: #fa709a; }
-    .derivacion-card.revision { border-left-color: #4facfe; }
+    .derivacion-card.pendiente { border-left-color: #a78bfa; }
+    .derivacion-card.aceptada { border-left-color: #10b981; }
+    .derivacion-card.rechazada { border-left-color: #ef4444; }
+    .derivacion-card.revision { border-left-color: #f59e0b; }
 
     .derivacion-header {
       display: flex;
@@ -76,7 +124,7 @@
       align-items: flex-start;
       margin-bottom: 1.2rem;
       padding-bottom: 1rem;
-      border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+      border-bottom: 2px solid rgba(15, 118, 110, 0.1);
       flex-wrap: wrap;
       gap: 0.5rem;
     }
@@ -94,9 +142,10 @@
     }
 
     .derivacion-id {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #667eea;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #7c3aed;
+      letter-spacing: 0.5px;
     }
 
     .derivacion-body {
@@ -136,36 +185,39 @@
     }
 
     .info-label {
-      font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.75rem;
+      color: #6d28d9;
       text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
       letter-spacing: 0.5px;
     }
 
     .info-value {
       font-size: 0.95rem;
-      color: #ffffff;
-      font-weight: 500;
+      color: #1e293b;
+      font-weight: 600;
       word-break: break-word;
     }
 
     .btn-glass {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      border: none;
       color: white;
-      padding: 0.6rem 1.5rem;
-      border-radius: 25px;
+      padding: 1rem 2rem;
+      border-radius: 14px;
       transition: all 0.3s ease;
-      font-weight: 500;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
+      text-decoration: none;
     }
 
     .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
       color: white;
     }
 
@@ -194,22 +246,22 @@
     }
 
     .btn-accept {
-      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: white;
     }
 
     .btn-review {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       color: white;
     }
 
     .btn-reject {
-      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: white;
     }
 
     .btn-liberar {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: white;
     }
 
@@ -225,22 +277,22 @@
     }
 
     .badge-pendiente {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
       color: white;
     }
 
     .badge-aceptada {
-      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: white;
     }
 
     .badge-rechazada {
-      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: white;
     }
 
     .badge-revision {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       color: white;
     }
 
@@ -254,13 +306,23 @@
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: white;
+      color: #c4b5fd;
     }
 
     .empty-state i {
       font-size: 5rem;
-      opacity: 0.5;
-      margin-bottom: 1rem;
+      opacity: 0.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-state h3 {
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    .empty-state p {
+      color: #a78bfa;
+      font-weight: 500;
     }
 
     @keyframes fadeIn {
@@ -303,11 +365,11 @@
     .derivacion-card:nth-child(5) { animation-delay: 0.3s; }
 
     .btn-action.btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
     }
 
     .btn-action.btn-primary:hover {
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
     }
 
     .btn-action.btn-secondary {
@@ -323,18 +385,19 @@
   <div class="container-fluid px-4">
     <div class="glass-container">
       <!-- Header -->
-      <div class="mb-5 pb-3" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+      <div class="mb-5 pb-3" style="border-bottom: 3px solid #ede9fe; position: relative;">
+        <div style="position: absolute; bottom: -3px; left: 0; width: 150px; height: 3px; background: linear-gradient(90deg, #7c3aed, #a78bfa, #c4b5fd); box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);"></div>
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div>
             <h1 class="header-title mb-3" style="font-size: 2.5rem;">
               <i class="fas fa-exchange-alt me-3"></i>Derivaciones Pendientes
             </h1>
-            <p class="text-white mb-0" style="font-size: 1.1rem;">
+            <p class="mb-0" style="font-size: 1.1rem; color: #6d28d9; font-weight: 600;">
               <i class="fas fa-list-check me-2"></i>Listado de solicitudes que requieren gestión
             </p>
           </div>
-          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="font-size: 1rem; white-space: nowrap;">
-            <i class="fas fa-arrow-left me-2"></i>Volver al Menú
+          <a href="{% url 'coordinador' %}" class="btn btn-glass" style="white-space: nowrap;">
+            <i class="fas fa-arrow-left"></i>Volver
           </a>
         </div>
       </div>
@@ -349,8 +412,8 @@
       
       <!-- Filtros -->
       <div class="glass-card" style="padding: 2rem;">
-        <h5 class="mb-4" style="font-size: 1.2rem; font-weight: 600;">
-          <i class="fas fa-filter me-2" style="color: #667eea;"></i>Filtros de Búsqueda
+        <h5 class="mb-4" style="font-size: 1.3rem; font-weight: 800; color: #5b21b6; text-transform: uppercase; letter-spacing: 0.5px;">
+          <i class="fas fa-filter me-2" style="color: #7c3aed;"></i>Filtros de Búsqueda
         </h5>
         <form method="GET" action="{% url 'coord_derivaciones' %}" id="filtrosForm">
           <div class="row g-3">
@@ -505,9 +568,9 @@
       </div>
       
       <div class="glass-card mt-4" style="padding: 1.5rem 2rem;">
-        <p class="mb-0 text-center" style="font-size: 1.1rem;">
-          <i class="fas fa-list me-2" style="color: #667eea;"></i>
-          Total de derivaciones: <strong style="color: #667eea; font-size: 1.2rem;">{{ derivaciones|length }}</strong>
+        <p class="mb-0 text-center" style="font-size: 1.1rem; font-weight: 600;">
+          <i class="fas fa-list me-2" style="color: #7c3aed;"></i>
+          Total de derivaciones: <strong style="color: #7c3aed; font-size: 1.3rem; font-weight: 800;">{{ derivaciones|length }}</strong>
         </p>
       </div>
     </div>
