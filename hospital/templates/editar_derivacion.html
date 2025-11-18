@@ -9,12 +9,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Paleta Púrpura Moderno */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
-      min-height: 100vh;
+      height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 2rem 0;
       position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     body::before {
@@ -31,22 +40,30 @@
       z-index: 0;
     }
 
-    .container {
+    .container-fluid {
       position: relative;
       z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
     }
 
     .edit-card {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(20px);
-      border-radius: 28px;
+      border-radius: 24px;
       padding: 0;
       box-shadow: 
         0 25px 70px rgba(124, 58, 237, 0.35),
         0 0 0 1px rgba(255, 255, 255, 0.6);
       border: 3px solid rgba(167, 139, 250, 0.3);
-      animation: fadeInUp 0.5s ease-out;
+      animation: fadeInUp 0.6s ease-out;
       overflow: hidden;
+      width: 100%;
+      max-height: 95vh;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes fadeInUp {
@@ -63,10 +80,11 @@
     .card-header-custom {
       background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       color: white;
-      padding: 2.5rem;
+      padding: 1.2rem 1.5rem;
       border: none;
       position: relative;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      flex-shrink: 0;
     }
 
     .card-header-custom::before {
@@ -75,7 +93,7 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 4px;
+      height: 3px;
       background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
     }
 
@@ -157,18 +175,80 @@
     }
 
     .card-body-custom {
-      padding: 3rem;
+      padding: 1rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .form-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .button-container {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 2px solid #ede9fe;
+      flex-shrink: 0;
+    }
+
+    .form-control, .form-select, textarea {
+      border: 2px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 0.6rem 0.8rem;
+      transition: all 0.3s ease;
+      background: white;
+      color: #1e293b;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.08);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .form-control:focus, .form-select:focus, textarea:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+      outline: none;
+    }
+
+    textarea.form-control {
+      resize: none;
+    }
+
+    .form-label {
+      font-weight: 700;
+      color: #5b21b6;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 0.8rem !important;
+    }
+
+    .btn {
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
     }
 
     .section-box {
       background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
       border-radius: 20px;
-      padding: 2.5rem;
-      margin-bottom: 2rem;
+      padding: 1.5rem;
+      margin-bottom: 0;
       border: 2px solid #ddd6fe;
       box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
       position: relative;
       overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .section-box::before {
@@ -183,26 +263,27 @@
 
     .section-title {
       color: #5b21b6;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 800;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      flex-shrink: 0;
     }
 
     .section-title i {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1rem;
       box-shadow: 
         0 6px 16px rgba(124, 58, 237, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -244,31 +325,34 @@
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       border-left: 5px solid #f59e0b;
       border-radius: 14px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
       color: #92400e;
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+      flex-shrink: 0;
+      font-size: 0.9rem;
     }
 
     .info-alert i {
       color: #f59e0b;
-      font-size: 1.3rem;
-      margin-right: 0.75rem;
+      font-size: 1.1rem;
+      margin-right: 0.5rem;
     }
 
     .btn-save {
       background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       border: none;
       border-radius: 14px;
-      padding: 1.2rem;
+      padding: 0.9rem;
       font-weight: 700;
       color: white;
       transition: all 0.3s ease;
       box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .btn-save:hover {
@@ -282,13 +366,13 @@
       background: linear-gradient(135deg, #64748b 0%, #475569 100%);
       border: none;
       border-radius: 14px;
-      padding: 1.2rem;
+      padding: 0.9rem;
       font-weight: 700;
       color: white;
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 1rem;
+      font-size: 0.9rem;
       box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
     }
 
@@ -339,62 +423,78 @@
         <form method="POST" action="{% url 'editar_derivacion' derivacion.id_derivacion %}">
           {% csrf_token %}
           
-          <div class="section-box">
-            <div class="section-title">
-              <i class="fas fa-notes-medical"></i>
-              <span>Información de la Derivación</span>
-            </div>
+          <div class="form-content">
+          <div class="row g-3">
+            <!-- Motivo y Prestación -->
+            <div class="col-lg-6">
+              <div class="section-box">
+                <div class="section-title">
+                  <i class="fas fa-file-medical"></i>
+                  <span>Información de Derivación</span>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="motivo" class="form-label">Motivo de Derivación</label>
+                  <textarea id="motivo" name="motivo" class="form-control" rows="4" required placeholder="Describa el motivo de la derivación...">{{ derivacion.motivo }}</textarea>
+                  <small class="text-muted">Razón médica de la derivación</small>
+                </div>
 
-            <div class="mb-3">
-              <label for="motivo" class="form-label">Motivo de la Derivación</label>
-              <textarea id="motivo" name="motivo" class="form-control" rows="4" required placeholder="Describa el motivo de la derivación...">{{ derivacion.motivo }}</textarea>
-              <small class="text-muted">Detalle la razón médica de la derivación</small>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="prestacion" class="form-label">Prestación Requerida</label>
-                <input type="text" id="prestacion" name="prestacion" class="form-control" value="{{ derivacion.prestacion }}" required placeholder="Ej: Cirugía, Cardiología">
-                <small class="text-muted">Especialidad o servicio necesario</small>
+                <div class="mb-3">
+                  <label for="prestacion" class="form-label">Prestación Requerida</label>
+                  <input type="text" id="prestacion" name="prestacion" class="form-control" value="{{ derivacion.prestacion }}" required placeholder="Ej: Cirugía, Cardiología">
+                  <small class="text-muted">Especialidad o servicio necesario</small>
+                </div>
               </div>
-              
-              <div class="col-md-6 mb-3">
-                <label for="hospital" class="form-label">Hospital Receptor</label>
-                <select id="hospital" class="form-select" name="hospital" required>
-                  {% for hosp in hospitales %}
-                    <option value="{{ hosp.id_hospital }}" {% if derivacion.id_hospital.id_hospital == hosp.id_hospital %}selected{% endif %}>
-                      {{ hosp.nombre }} 
-                      {% if hosp.camas_disponibles > 5 %}
-                        (✓ {{ hosp.camas_disponibles }} camas)
-                      {% elif hosp.camas_disponibles > 0 %}
-                        (⚠ {{ hosp.camas_disponibles }} camas)
-                      {% else %}
-                        (✗ Sin camas)
-                      {% endif %}
-                    </option>
-                  {% endfor %}
-                </select>
-                <small class="text-muted">Seleccione el hospital de destino</small>
+            </div>
+
+            <!-- Hospital Receptor -->
+            <div class="col-lg-6">
+              <div class="section-box">
+                <div class="section-title">
+                  <i class="fas fa-hospital-alt"></i>
+                  <span>Hospital Receptor</span>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="hospital" class="form-label">Hospital de Destino</label>
+                  <select id="hospital" class="form-select" name="hospital" required>
+                    {% for hosp in hospitales %}
+                      <option value="{{ hosp.id_hospital }}" {% if derivacion.id_hospital.id_hospital == hosp.id_hospital %}selected{% endif %}>
+                        {{ hosp.nombre }} 
+                        {% if hosp.camas_disponibles > 5 %}
+                          (✓ {{ hosp.camas_disponibles }} camas disponibles)
+                        {% elif hosp.camas_disponibles > 0 %}
+                          (⚠ {{ hosp.camas_disponibles }} camas disponibles)
+                        {% else %}
+                          (✗ Sin camas disponibles)
+                        {% endif %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <small class="text-muted">Seleccione el hospital según disponibilidad de camas</small>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="info-alert">
             <i class="fas fa-info-circle"></i>
-            <strong>Nota:</strong> El estado de la derivación solo puede ser modificado por el coordinador. 
-            Puedes editar el motivo, prestación y hospital de destino.
+            <strong>Nota:</strong> El estado solo puede ser modificado por el coordinador.
+          </div>
           </div>
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <button type="submit" class="btn btn-save w-100">
-                <i class="fas fa-save me-2"></i>Guardar Cambios
-              </button>
-            </div>
-            <div class="col-md-6">
-              <a href="{% url 'ver_derivaciones' %}" class="btn btn-cancel w-100">
-                <i class="fas fa-times me-2"></i>Cancelar
-              </a>
+          <div class="button-container">
+            <div class="row g-2">
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-save w-100">
+                  <i class="fas fa-save me-2"></i>Guardar Cambios
+                </button>
+              </div>
+              <div class="col-md-6">
+                <a href="{% url 'ver_derivaciones' %}" class="btn btn-cancel w-100">
+                  <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+              </div>
             </div>
           </div>
         </form>

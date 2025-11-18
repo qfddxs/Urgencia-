@@ -83,8 +83,24 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
+# Override MariaDB version check and disable RETURNING clause for compatibility
+from django.db.backends.mysql.base import DatabaseWrapper
+from django.db.backends.mysql.features import DatabaseFeatures
+
+# Disable RETURNING clause support
+DatabaseFeatures.can_return_columns_from_insert = False
+
+# Override version check
+original_check = DatabaseWrapper.check_database_version_supported
+def patched_check(self):
+    pass  # Skip version check
+DatabaseWrapper.check_database_version_supported = patched_check
 
 
 # Password validation

@@ -7,72 +7,421 @@
   <title>Editar Ficha de Paciente</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container-fluid {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .form-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: 
+        0 25px 70px rgba(124, 58, 237, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      border: 3px solid rgba(167, 139, 250, 0.3);
+      animation: fadeInUp 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+      max-height: 95vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .form-header {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #ede9fe;
+    }
+
+    .form-header h1 {
+      color: #5b21b6;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .form-header h1 i {
+      color: #7c3aed;
+      font-size: 1.4rem;
+    }
+
+    .form-header p {
+      color: #6d28d9;
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .form-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .form-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .form-content::-webkit-scrollbar-track {
+      background: #ede9fe;
+      border-radius: 10px;
+    }
+
+    .form-content::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
+    }
+
+    .section-title {
+      color: #5b21b6;
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section-title i {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    .form-control, .form-select {
+      border: 2px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 0.6rem 0.8rem;
+      transition: all 0.3s ease;
+      background: #ffffff;
+      color: #1e293b;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.08);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .form-control:disabled {
+      background: #f3f4f6;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+      background: #ffffff;
+      outline: none;
+    }
+
+    textarea.form-control {
+      resize: none;
+    }
+
+    .form-label {
+      font-weight: 700 !important;
+      color: #5b21b6 !important;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem !important;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .form-label::before {
+      content: '◆';
+      color: #a78bfa !important;
+      font-size: 0.6rem;
+    }
+
+    .form-text {
+      color: #7c3aed;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 0.3rem;
+    }
+
+    .section-box {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 2px solid #ddd6fe;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+    }
+
+    .mb-3 {
+      margin-bottom: 0.8rem !important;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem;
+      font-weight: 700;
+      color: white;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.5);
+      background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+    }
+
+    .btn-back {
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.4);
+    }
+
+    .button-container {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #ede9fe;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-height: 800px) {
+      .form-header h1 {
+        font-size: 1.4rem;
+      }
+      .section-title {
+        font-size: 0.9rem;
+      }
+      .section-title i {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Sobrescribir estilos de Bootstrap para labels */
+    label.form-label,
+    .form-label {
+      color: #5b21b6 !important;
+      font-weight: 700 !important;
+      font-size: 0.8rem !important;
+    }
+
+    .col-6 .form-label,
+    .col-lg-6 .form-label,
+    .mb-3 .form-label {
+      color: #5b21b6 !important;
+    }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <div class="card shadow-sm main-card">
-      <div class="card-header bg-white border-0 py-4">
-        <h1>Editar Ficha de Paciente</h1>
+  <div class="container-fluid px-3">
+    <div class="form-card" style="max-width: 1400px; margin: 0 auto; width: 100%;">
+      <div class="form-header">
+        <h1><i class="fa fa-user-edit"></i>Editar Ficha de Paciente</h1>
+        <p><i class="fas fa-info-circle" style="color: #a78bfa;"></i> Actualice los datos del paciente</p>
       </div>
-      <div class="card-body p-4">
+
+      <div class="form-content">
         <form method="POST" action="{% url 'editar_paciente' paciente.rut %}">
           {% csrf_token %}
-          <fieldset class="mb-4">
-            <legend class="h5 mb-3">Datos del Paciente</legend>
-            <div class="mb-3">
-              <label for="rut" class="form-label">RUT</label>
-              <input type="text" id="rut" name="rut" class="form-control" value="{{ paciente.rut }}" readonly disabled>
-              <div class="form-text">El RUT no se puede modificar.</div>
-            </div>
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre completo</label>
-              <input type="text" id="nombre" name="nombre" class="form-control" value="{{ paciente.nombre }}" required>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="edad" class="form-label">Edad</label>
-                <input type="number" id="edad" name="edad" class="form-control" value="{{ paciente.edad }}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="genero" class="form-label">Género</label>
-                <select id="genero" name="genero" class="form-select">
-                  <option value="">Seleccionar...</option>
-                  <option value="Masculino" {% if paciente.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
-                  <option value="Femenino" {% if paciente.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
-                  <option value="Otro" {% if paciente.genero == 'Otro' %}selected{% endif %}>Otro</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="prevision" class="form-label">Previsión</label>
-              <select id="prevision" name="prevision" class="form-select">
-                <option value="">Seleccionar...</option>
-                <option value="Fonasa" {% if paciente.prevision == 'Fonasa' %}selected{% endif %}>Fonasa</option>
-                <option value="Isapre" {% if paciente.prevision == 'Isapre' %}selected{% endif %}>Isapre</option>
-                <option value="Particular" {% if paciente.prevision == 'Particular' %}selected{% endif %}>Particular</option>
-                <option value="Otro" {% if paciente.prevision == 'Otro' %}selected{% endif %}>Otro</option>
-              </select>
-            </div>
-          </fieldset>
+          
+          <div class="row g-3">
+            <!-- Datos del Paciente -->
+            <div class="col-lg-6">
+              <div class="section-box">
+                <div class="section-title">
+                  <i class="fa fa-user"></i>
+                  <span>Datos del Paciente</span>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="rut" class="form-label">RUT</label>
+                  <input type="text" id="rut" name="rut" class="form-control" value="{{ paciente.rut }}" readonly disabled>
+                  <small class="form-text">No se puede modificar</small>
+                </div>
 
-          <fieldset class="mb-4">
-            <legend class="h5 mb-3">Condiciones Clínicas</legend>
-            <div class="mb-3">
-              <label for="comorbilidades" class="form-label">Comorbilidades</label>
-              <textarea id="comorbilidades" name="comorbilidades" class="form-control" rows="3" placeholder="Ej: Diabetes, Hipertensión">{% if ficha %}{{ ficha.comorbilidades }}{% endif %}</textarea>
-            </div>
-            <div class="mb-3">
-              <label for="funcionalidad" class="form-label">Funcionalidad</label>
-              <input type="text" id="funcionalidad" name="funcionalidad" class="form-control" value="{% if ficha %}{{ ficha.funcionalidad }}{% endif %}" placeholder="Ej: Autovalente, Dependiente">
-            </div>
-          </fieldset>
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre Completo</label>
+                  <input type="text" id="nombre" name="nombre" class="form-control" value="{{ paciente.nombre }}" required>
+                </div>
 
-          <button type="submit" class="btn btn-primary w-100 py-2">Guardar Cambios</button>
+                <div class="row">
+                  <div class="col-6 mb-3">
+                    <label for="edad" class="form-label">Edad</label>
+                    <input type="number" id="edad" name="edad" class="form-control" value="{{ paciente.edad }}" required>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <label for="genero" class="form-label">Género</label>
+                    <select id="genero" name="genero" class="form-select">
+                      <option value="">Seleccionar...</option>
+                      <option value="Masculino" {% if paciente.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+                      <option value="Femenino" {% if paciente.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+                      <option value="Otro" {% if paciente.genero == 'Otro' %}selected{% endif %}>Otro</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="prevision" class="form-label">Previsión</label>
+                  <select id="prevision" name="prevision" class="form-select">
+                    <option value="">Seleccionar...</option>
+                    <option value="Fonasa" {% if paciente.prevision == 'Fonasa' %}selected{% endif %}>Fonasa</option>
+                    <option value="Isapre" {% if paciente.prevision == 'Isapre' %}selected{% endif %}>Isapre</option>
+                    <option value="Particular" {% if paciente.prevision == 'Particular' %}selected{% endif %}>Particular</option>
+                    <option value="Otro" {% if paciente.prevision == 'Otro' %}selected{% endif %}>Otro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Condiciones Clínicas -->
+            <div class="col-lg-6">
+              <div class="section-box">
+                <div class="section-title">
+                  <i class="fa fa-notes-medical"></i>
+                  <span>Condiciones Clínicas</span>
+                </div>
+
+                <div class="mb-3">
+                  <label for="comorbilidades" class="form-label">Comorbilidades</label>
+                  <textarea id="comorbilidades" name="comorbilidades" class="form-control" rows="4" placeholder="Ej: Diabetes, Hipertensión">{% if ficha %}{{ ficha.comorbilidades }}{% endif %}</textarea>
+                  <small class="form-text">Enfermedades previas</small>
+                </div>
+
+                <div class="mb-3">
+                  <label for="funcionalidad" class="form-label">Funcionalidad</label>
+                  <input type="text" id="funcionalidad" name="funcionalidad" class="form-control" value="{% if ficha %}{{ ficha.funcionalidad }}{% endif %}" placeholder="Ej: Autovalente">
+                  <small class="form-text">Nivel de independencia</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="button-container">
+            <div class="row g-2">
+              <div class="col-md-8">
+                <button type="submit" class="btn btn-submit w-100">
+                  <i class="fa fa-save me-2"></i>Guardar Cambios
+                </button>
+              </div>
+              <div class="col-md-4">
+                <a href="{% url 'ver_fichas' %}" class="btn btn-back w-100">
+                  <i class="fa fa-arrow-left me-2"></i>Cancelar
+                </a>
+              </div>
+            </div>
+          </div>
         </form>
-        <a href="{% url 'ver_fichas' %}" class="d-block text-center mt-4">Cancelar y Volver</a>
       </div>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

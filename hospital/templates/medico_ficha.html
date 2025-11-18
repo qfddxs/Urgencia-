@@ -10,12 +10,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Paleta Púrpura Moderno */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
-      min-height: 100vh;
+      height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 2rem 0;
       position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     body::before {
@@ -35,21 +44,29 @@
     .container {
       position: relative;
       z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      padding: 2rem 1rem;
+      overflow: visible;
     }
 
     .ficha-card {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(20px);
-      border-radius: 28px;
-      padding: 3rem;
+      border-radius: 24px;
+      padding: 2rem;
       box-shadow: 
         0 25px 70px rgba(124, 58, 237, 0.35),
         0 0 0 1px rgba(255, 255, 255, 0.6);
       border: 3px solid rgba(167, 139, 250, 0.3);
-      animation: fadeInUp 0.5s ease-out;
-      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .ficha-card::before {
@@ -58,34 +75,50 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 6px;
+      height: 5px;
       background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
-    .ficha-card h1 {
+    .search-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .search-header h1 {
       color: #5b21b6;
+      font-size: 2.3rem;
       font-weight: 800;
+      margin-bottom: 0.75rem;
       text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
     }
 
-    .ficha-card h1 i {
+    .search-header h1 i {
       color: #7c3aed;
+    }
+
+    .search-header p {
+      color: #6d28d9;
+      font-size: 1.05rem;
+      font-weight: 500;
     }
 
     .search-box {
       position: relative;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
+      flex-shrink: 0;
     }
 
     .search-input {
       width: 100%;
-      padding: 1.2rem 1.75rem 1.2rem 4rem;
+      padding: 1.4rem 1.75rem 1.4rem 4.5rem;
       border: 2px solid #ddd6fe;
-      border-radius: 16px;
-      font-size: 1.05rem;
+      border-radius: 18px;
+      font-size: 1.1rem;
       transition: all 0.3s ease;
       background: white;
       font-weight: 500;
+      color: #1e293b;
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
     }
 
@@ -104,48 +137,89 @@
 
     .search-icon {
       position: absolute;
-      left: 1.5rem;
+      left: 1.75rem;
       top: 50%;
       transform: translateY(-50%);
       color: #7c3aed;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     .suggestions-box {
       position: absolute;
       width: 100%;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.2);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.3);
       margin-top: 0.5rem;
-      max-height: 300px;
+      max-height: 500px;
       overflow-y: auto;
-      z-index: 1000;
+      z-index: 10000;
       border: 2px solid #ddd6fe;
+      left: 0;
+      top: 100%;
+    }
+
+    .suggestions-box::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-track {
+      background: #ede9fe;
+      border-radius: 10px;
+      margin: 4px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-thumb:hover {
+      background: #7c3aed;
+    }
+
+    .results-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .results-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .results-content::-webkit-scrollbar-track {
+      background: #ede9fe;
+      border-radius: 10px;
+    }
+
+    .results-content::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
     }
 
     .info-section {
       background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       color: white;
-      border-radius: 20px;
-      padding: 2rem;
-      margin-bottom: 2rem;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       box-shadow: 
         0 10px 30px rgba(124, 58, 237, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .info-section h5 {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       font-weight: 800;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 0.75rem 0;
+      padding: 0.6rem 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
@@ -156,19 +230,19 @@
     .info-label {
       font-weight: 700;
       opacity: 0.95;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .info-row span:last-child {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .clinical-section {
       background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-      border-radius: 20px;
-      padding: 2rem;
-      margin-bottom: 2rem;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       border: 2px solid #ddd6fe;
       box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
       position: relative;
@@ -180,7 +254,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 5px;
+      width: 4px;
       height: 100%;
       background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
@@ -188,8 +262,8 @@
     .clinical-section h6 {
       color: #5b21b6;
       font-weight: 800;
-      margin-bottom: 1.5rem;
-      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
     }
 
     .clinical-section strong {
@@ -205,14 +279,20 @@
 
     .action-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.25rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
     }
 
     .btn-action {
-      padding: 1.2rem;
-      border-radius: 14px;
+      padding: 0.9rem;
+      border-radius: 12px;
       border: none;
       font-weight: 700;
       transition: all 0.3s ease;
@@ -221,13 +301,13 @@
       text-align: center;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-size: 0.9rem;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      font-size: 0.8rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .btn-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     }
 
     .btn-secondary-custom {
@@ -263,37 +343,39 @@
       background: linear-gradient(135deg, #64748b 0%, #475569 100%);
       color: white;
       border: none;
-      border-radius: 14px;
-      padding: 1rem 2rem;
+      border-radius: 12px;
+      padding: 0.8rem 1.5rem;
       font-weight: 700;
       transition: all 0.3s ease;
       display: inline-block;
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 1px;
-      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.3);
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
     }
 
     .btn-back:hover {
       background: linear-gradient(135deg, #475569 0%, #334155 100%);
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.4);
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="container" style="max-width: 900px;">
+  <div class="container" style="max-width: 1400px; width: 95%;">
+
     <div class="ficha-card">
-      <h1 class="mb-4" style="color: #1e293b;">
-        <i class="fa fa-file-medical me-2" style="color: #0f766e;"></i>
-        Ficha Clínica del Paciente
-      </h1>
+      <div class="search-header">
+        <h1><i class="fa fa-file-medical me-2"></i>Ficha Clínica del Paciente</h1>
+        <p>Consulta los datos completos y clínicos del paciente</p>
+      </div>
 
       <!-- Buscador -->
       <form method="GET" action="{% url 'medico_ficha' %}">
@@ -307,10 +389,11 @@
                  value="{% if paciente %}{{ paciente.rut }}{% endif %}"
                  autocomplete="off"
                  required>
-          <div id="sugerencias-ficha" class="suggestions-box" style="display: none; position: absolute; width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-top: 0.5rem; max-height: 300px; overflow-y: auto; z-index: 1000;"></div>
+          <div id="sugerencias-ficha" class="suggestions-box" style="display: none;"></div>
         </div>
       </form>
 
+      <div class="results-content">
       {% if paciente %}
         <!-- Datos del Paciente -->
         <div class="info-section">
@@ -376,8 +459,9 @@
           </a>
         </div>
       {% endif %}
+      </div>
 
-      <div class="text-center mt-4">
+      <div class="text-center mt-3" style="flex-shrink: 0;">
         <a href="{% url 'medico' %}" class="btn-back">
           <i class="fa fa-arrow-left me-2"></i>Volver al Panel Médico
         </a>
@@ -417,10 +501,10 @@
                 const edad = row.children[2].textContent.trim();
                 
                 const item = document.createElement('div');
-                item.style.cssText = 'padding: 1.25rem 1.75rem; border-bottom: 1px solid #ede9fe; cursor: pointer; transition: all 0.3s ease;';
+                item.style.cssText = 'padding: 1.5rem 2rem; border-bottom: 1px solid #ede9fe; cursor: pointer; transition: all 0.3s ease; min-height: 80px; display: flex; flex-direction: column; justify-content: center;';
                 item.innerHTML = `
-                  <div style="font-weight: 700; color: #5b21b6; font-size: 1.05rem;">${nombre}</div>
-                  <div style="font-size: 0.9rem; color: #7c3aed; font-weight: 500;">RUT: ${rut} | ${edad}</div>
+                  <div style="font-weight: 700; color: #5b21b6; font-size: 1.1rem; margin-bottom: 0.3rem;">${nombre}</div>
+                  <div style="font-size: 0.95rem; color: #7c3aed; font-weight: 500;">RUT: ${rut} | ${edad}</div>
                 `;
                 
                 item.addEventListener('mouseenter', () => {

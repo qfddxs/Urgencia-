@@ -17,10 +17,15 @@
 
     body {
       background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
-      min-height: 100vh;
+      height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 2rem 0;
       position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
     }
 
     body::before {
@@ -40,24 +45,27 @@
     .container {
       position: relative;
       z-index: 1;
-    }
-
-    .container {
       max-width: 1400px;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
     }
 
     .header-card {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(20px);
-      border-radius: 28px;
-      padding: 2.5rem;
-      margin-bottom: 2rem;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
       box-shadow: 
         0 25px 70px rgba(124, 58, 237, 0.35),
         0 0 0 1px rgba(255, 255, 255, 0.6);
       border: 3px solid rgba(167, 139, 250, 0.3);
       position: relative;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .header-card::before {
@@ -66,25 +74,26 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 6px;
+      height: 4px;
       background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
     .welcome-text {
       color: #5b21b6;
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
       text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
     }
 
     .welcome-text i {
       color: #7c3aed;
+      font-size: 1.4rem;
     }
 
     .subtitle {
       color: #6d28d9;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
@@ -92,14 +101,14 @@
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: white;
       border: none;
-      padding: 0.875rem 1.75rem;
-      border-radius: 14px;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
       font-weight: 700;
       transition: all 0.3s ease;
       box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .btn-logout:hover {
@@ -111,22 +120,54 @@
 
     .menu-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      flex: 1;
+      align-content: start;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .menu-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .menu-grid::-webkit-scrollbar-track {
+      background: rgba(237, 233, 254, 0.3);
+      border-radius: 10px;
+    }
+
+    .menu-grid::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 992px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .menu-card {
       background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
       backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 2.5rem;
+      border-radius: 18px;
+      padding: 1.5rem;
       border: 2px solid #ddd6fe;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       position: relative;
       overflow: hidden;
       box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
     }
 
     .menu-card::before {
@@ -138,7 +179,7 @@
       height: 100%;
       background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .menu-card:hover::before {
@@ -146,27 +187,27 @@
     }
 
     .menu-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
       border-color: #a78bfa;
     }
 
     .icon-box {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 
-        0 8px 20px rgba(124, 58, 237, 0.3),
+        0 6px 16px rgba(124, 58, 237, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .menu-card:hover .icon-box {
-      transform: scale(1.08);
+      transform: scale(1.05) rotate(5deg);
     }
 
     .icon-box.primary {
@@ -194,44 +235,45 @@
     }
 
     .icon-box i {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: white;
     }
 
     .card-title {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #5b21b6;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
       letter-spacing: 0.3px;
     }
 
     .card-description {
       color: #6d28d9;
-      font-size: 0.95rem;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
       font-weight: 500;
+      flex: 1;
     }
 
     .btn-action {
       width: 100%;
-      padding: 1rem;
-      border-radius: 14px;
+      padding: 0.75rem;
+      border-radius: 12px;
       border: none;
       font-weight: 700;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
+      font-size: 0.8rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
     }
 
     .btn-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
     }
 
     .btn-action span {
@@ -296,7 +338,7 @@
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -305,18 +347,18 @@
     }
 
     .menu-card {
-      animation: fadeInUp 0.5s ease-out backwards;
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
     }
 
-    .menu-card:nth-child(1) { animation-delay: 0.05s; }
-    .menu-card:nth-child(2) { animation-delay: 0.1s; }
-    .menu-card:nth-child(3) { animation-delay: 0.15s; }
-    .menu-card:nth-child(4) { animation-delay: 0.2s; }
-    .menu-card:nth-child(5) { animation-delay: 0.25s; }
-    .menu-card:nth-child(6) { animation-delay: 0.3s; }
+    .menu-card:nth-child(1) { animation-delay: 0.1s; }
+    .menu-card:nth-child(2) { animation-delay: 0.2s; }
+    .menu-card:nth-child(3) { animation-delay: 0.3s; }
+    .menu-card:nth-child(4) { animation-delay: 0.4s; }
+    .menu-card:nth-child(5) { animation-delay: 0.5s; }
+    .menu-card:nth-child(6) { animation-delay: 0.6s; }
 
     .header-card {
-      animation: fadeInUp 0.5s ease-out;
+      animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
   </style>
 </head>

@@ -10,12 +10,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Paleta Púrpura Moderno */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a78bfa 100%);
-      min-height: 100vh;
+      height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 2rem 0;
       position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     body::before {
@@ -35,6 +44,11 @@
     .container {
       position: relative;
       z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      padding: 2rem 1rem;
+      overflow: visible;
     }
 
     .actual-card {
@@ -48,7 +62,11 @@
       border: 3px solid rgba(167, 139, 250, 0.3);
       animation: fadeInUp 0.5s ease-out;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .actual-card::before {
@@ -61,30 +79,46 @@
       background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
     }
 
-    .actual-card h1 {
+    .search-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .search-header h1 {
       color: #5b21b6;
+      font-size: 2.3rem;
       font-weight: 800;
+      margin-bottom: 0.75rem;
       text-shadow: 2px 2px 8px rgba(124, 58, 237, 0.15);
     }
 
-    .actual-card h1 i {
+    .search-header h1 i {
       color: #7c3aed;
+    }
+
+    .search-header p {
+      color: #6d28d9;
+      font-size: 1.05rem;
+      font-weight: 500;
     }
 
     .search-box {
       position: relative;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
+      flex-shrink: 0;
     }
 
     .search-input {
       width: 100%;
-      padding: 1.2rem 1.75rem 1.2rem 4rem;
+      padding: 1.4rem 1.75rem 1.4rem 4.5rem;
       border: 2px solid #ddd6fe;
-      border-radius: 16px;
-      font-size: 1.05rem;
+      border-radius: 18px;
+      font-size: 1.1rem;
       transition: all 0.3s ease;
       background: white;
       font-weight: 500;
+      color: #1e293b;
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
     }
 
@@ -103,24 +137,65 @@
 
     .search-icon {
       position: absolute;
-      left: 1.5rem;
+      left: 1.75rem;
       top: 50%;
       transform: translateY(-50%);
       color: #7c3aed;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     .suggestions-box {
       position: absolute;
       width: 100%;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.2);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.3);
       margin-top: 0.5rem;
-      max-height: 300px;
+      max-height: 500px;
       overflow-y: auto;
-      z-index: 1000;
+      z-index: 10000;
       border: 2px solid #ddd6fe;
+      left: 0;
+      top: 100%;
+    }
+
+    .suggestions-box::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-track {
+      background: #ede9fe;
+      border-radius: 10px;
+      margin: 4px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
+    }
+
+    .suggestions-box::-webkit-scrollbar-thumb:hover {
+      background: #7c3aed;
+    }
+
+    .results-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .results-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .results-content::-webkit-scrollbar-track {
+      background: #ede9fe;
+      border-radius: 10px;
+    }
+
+    .results-content::-webkit-scrollbar-thumb {
+      background: #a78bfa;
+      border-radius: 10px;
     }
 
     .patient-banner {
@@ -365,7 +440,7 @@
   </style>
 </head>
 <body>
-  <div class="container" style="max-width: 1000px;">
+  <div class="container" style="max-width: 1400px; width: 95%;">
     <div class="actual-card">
       <h1 class="mb-4" style="color: #1e293b;">
         <i class="fa fa-clipboard-check me-2" style="color: #0f766e;"></i>
